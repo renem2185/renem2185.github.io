@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+    <title>Misskey個人サーバを立てたあとの管理みたいな話 :: Murakumo-san is distributed now</title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="鯖缶の務め is 何？ はじめに おつかれさまです、村雲です。 ここしばらくは本当に色々あり、Misskeyはよき現実逃避として機能していたかと思われま" />
+<meta name="keywords" content=", " />
+
+  <meta name="robots" content="noodp" />
+
+<link rel="canonical" href="https://renem2185.github.io/posts/after_misskey_startup/" />
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="https://renem2185.github.io/styles.css">
+
+
+
+<link rel="stylesheet" href="https://renem2185.github.io/style.css">
+
+
+
+  <link rel="shortcut icon" href="https://renem2185.github.io/img/theme-colors/orange.png">
+  <link rel="apple-touch-icon" href="https://renem2185.github.io/img/theme-colors/orange.png">
+
+
+
+<meta name="twitter:card" content="summary" />
+
+  
+    <meta name="twitter:site" content="rene_murakumo" />
+  
+    <meta name="twitter:creator" content="" />
+
+
+
+<meta property="og:locale" content="en" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="Misskey個人サーバを立てたあとの管理みたいな話">
+<meta property="og:description" content="鯖缶の務め is 何？ はじめに おつかれさまです、村雲です。 ここしばらくは本当に色々あり、Misskeyはよき現実逃避として機能していたかと思われま" />
+<meta property="og:url" content="https://renem2185.github.io/posts/after_misskey_startup/" />
+<meta property="og:site_name" content="Murakumo-san is distributed now" />
+
+  
+  
+  <meta property="og:image" content="https://renem2185.github.io/">
+
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="627">
+
+
+  <meta property="article:published_time" content="2023-09-07 21:03:48 &#43;0900 JST" />
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+<body class="orange">
+
+
+<div class="container headings--one-size">
+
+  <header class="header">
+  <div class="header__inner">
+    <div class="header__logo">
+      <a href="/">
+  <div class="logo">
+    Murakumo-san is distributed now
+  </div>
+</a>
+
+    </div>
+    
+      <ul class="menu menu--mobile">
+  <li class="menu__trigger">Menu&nbsp;▾</li>
+  <li>
+    <ul class="menu__dropdown">
+      
+        
+          <li><a href="/posts/about">About</a></li>
+        
+      
+        
+          <li><a href="/posts/links">Links</a></li>
+        
+      
+      
+    </ul>
+  </li>
+</ul>
+
+    
+    
+  </div>
+  
+    <nav class="navigation-menu">
+  <ul class="navigation-menu__inner menu--desktop">
+    
+      
+        
+          <li><a href="/posts/about" >About</a></li>
+        
+      
+        
+          <li><a href="/posts/links" >Links</a></li>
+        
+      
+      
+    
+  </ul>
+</nav>
+
+  
+</header>
+
+
+  <div class="content">
+    
+<article class="post">
+  <h1 class="post-title">
+    <a href="https://renem2185.github.io/posts/after_misskey_startup/">Misskey個人サーバを立てたあとの管理みたいな話</a>
+  </h1>
+  <div class="post-meta">
+    
+      <time class="post-date">
+        2023-09-07 ::
+        
+      </time>
+    
+    
+    
+  </div>
+
+  
+    <span class="post-tags">
+      
+      #<a href="https://renem2185.github.io/tags/linux/">linux</a>&nbsp;
+      
+      #<a href="https://renem2185.github.io/tags/activitypub/">activitypub</a>&nbsp;
+      
+      #<a href="https://renem2185.github.io/tags/misskey/">misskey</a>&nbsp;
+      
+    </span>
+  
+  
+
+
+  
+
+  <div class="post-content"><div>
+        <blockquote>
+<p>鯖缶の務め is 何？</p>
+</blockquote>
+<h2 id="はじめに">はじめに<a href="#はじめに" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<p>おつかれさまです、村雲です。</p>
+<p>ここしばらくは本当に色々あり、Misskeyはよき現実逃避として機能していたかと思われます。
+関わってくださった皆様、いつもありがとうございます。いや本当に。</p>
+<p>辛うじて動ける隙間時間みたいなものをかき集めて自分の個人鯖を構築してからは、
+こちらのブログもどきそっちのけでマイクロブログのほうをやっちゃっておりますね。
+こちらのほうが私に合っているのでしょうか？</p>
+<p>ともかく、今回は私のできたてほやほやな個人鯖
+<a href="https://mi.tsujigoya.net/">「つじごや」</a>
+の運用について書いていこうかと。
+と言ってもおひとりさま前提の手抜き仕様なんですけど。</p>
+<h2 id="背景-うちの構成">背景: うちの構成<a href="#背景-うちの構成" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<p>本編の前に、うちの現環境について軽くさらっていこうかと。</p>
+
+  <img src="/img/misskey_topology_1.png"  alt="つじごや鯖構成図"  class="left"  />
+
+
+<p>リバースプロキシだけさくらのVPSに置き、残りをオンプレミス (越したばかりの自室) で構築、
+両者をWireGuard VPNのトンネルで繋ぐようにしました。</p>
+<p>一応はVのものを自称している以上、
+グローバルIPアドレスは隠しておきたいなっていう意図です。</p>
+<h4 id="vps側">VPS側<a href="#vps側" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h4>
+<p>さくらのVPSの最安である <code>512M</code> プランですが、Nginxだけ、かつ今の規模なら余裕そうです。
+おかげさまでIPv4 / IPv6両方のグローバルアドレスを持った子が月643JPYです。
+お得 (<a href="#%E6%B3%A8%E9%87%88">注1</a>)。</p>
+<p>それと初めてRocky Linux 9を使いました。
+そこそこ新しいパッケージが降ってくるCentOS、みたいな使用感？</p>
+<h4 id="オンプレ側">オンプレ側<a href="#オンプレ側" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h4>
+<p>DeskminiっていうミニPCなのですが、以前VMを試していたらちょっと重く感じたので、
+より軽量なLinux Container (LXC) とLXDで仮想化しています。
+DeskminiというかCPUがちょっと古くて4コア8スレッドなので多分それなんですけれども。</p>
+<p>それとホストOS側・コンテナ側共にディストロはOpenSUSE Tumbleweedにしました。
+<del>Btrfsが使えれば何でもいい説はある。</del></p>
+<h2 id="ほんへ">ほんへ<a href="#ほんへ" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<p><strong><a href="https://log.sda1.net/blog/misskey-advent-2022/">nexryaiさまのこちらの記事</a></strong>
+がたいへん充実しておりますので、ぜひご一読を。</p>
+<p>以下に私の<del>ガバガバ</del>運用をまとめます。</p>
+<ol>
+<li><a href="#1-%E5%85%AC%E9%96%8B%E3%82%B5%E3%83%BC%E3%83%90%E3%82%92%E5%AE%89%E5%85%A8%E3%81%AB%E3%81%99%E3%82%8B">ファイアウォール</a></li>
+<li><a href="#2-%E3%83%90%E3%83%83%E3%82%AF%E3%82%A2%E3%83%83%E3%83%97%E3%82%92%E5%8F%96%E3%81%A3%E3%81%A6%E3%82%A4%E3%83%B3%E3%82%B7%E3%83%87%E3%83%B3%E3%83%88%E3%81%AB%E5%82%99%E3%81%88%E3%82%8B">バックアップ</a></li>
+<li><a href="#3-%E3%83%91%E3%83%83%E3%82%B1%E3%83%BC%E3%82%B8%E3%82%92%E6%96%B0%E3%81%97%E3%81%8F%E3%81%99%E3%82%8B">パッケージ更新</a></li>
+</ol>
+<p>みたいに分けてみました。</p>
+<h3 id="1-公開サーバを安全にする">1. 公開サーバを安全にする<a href="#1-公開サーバを安全にする" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<p>セキュリティなんもわからん……</p>
+<p>うちの場合、主に直接外に公開しているVPS側の対策になります。</p>
+<h4 id="sshポートを外部から隠す">SSHポートを外部から隠す<a href="#sshポートを外部から隠す" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h4>
+<p><code>22/TCP</code>以外に変更しても <code>/var/log/secure</code>が埋まりがちだったので、
+グローバルIPへ直接SSHしに行くのではなく、トンネルを経由させるようにしました。</p>
+<p>うちだと少々回りくどいですが、
+上図のメインPCから一度LXCインスタンスを踏み台にして、
+それからトンネルの向こうの鯖に、といった具合に。</p>
+<p>↓ Main PC: <code>~/.ssh/config</code></p>
+<pre tabindex="0"><code class="language-conf" data-lang="conf">Host さくらのVPS               # お好きな名前で
+    ProxyJump LXCインスタンス   # 別途configに記述
+    Port SSHのポート番号        # 22番に戻していない
+    Hostname A.B.C.D          # VPSのLAN用アドレス、今回はDummy I/Fを使用
+    User ログインユーザ名
+    IdentityFile /path/to/鍵_ed25519
+    IdentitiesOnly yes
+</code></pre><p>そしたらファイアウォールでSSHのポートを塞いじゃいましょう。
+Rockyの標準であるFirewalldを使っています。</p>
+<pre tabindex="0"><code>## さくらのVPSにて
+# firewall-cmd --remove-service=ssh --zone=public
+
+## 一時的に塞いでもSSHが途切れないことを確認してから
+# firewall-cmd --remove-service=ssh --zone=public --permanent
+</code></pre><p>それと<em><strong>トンネルはトンネルで</strong></em> 公開ポート番号をデフォルトから変更するとか、
+時々更新をチェックするとか、必要な対策を施せるとよいかなと。</p>
+<h4 id="wireguardのログを確認する">WireGuardのログを確認する<a href="#wireguardのログを確認する" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h4>
+<p>デフォルトだと記録されないようですが、
+ダイナミックデバッグなるものを有効化することでカーネルリングバッファに出力させて
+<code>dmesg</code>で読めるようになります。</p>
+<pre tabindex="0"><code>## さくらのVPSにて、設定をする
+# echo module wireguard +p &gt; /sys/kernel/debug/dynamic_debug/control
+
+## ログを読む
+$ dmesg | grep wireguard  # インターフェース名で絞ってもいいかも
+</code></pre><p>例えば自分以外の誰かが侵入を試みていたら</p>
+<pre tabindex="0"><code>$ dmesg | grep wg0 | grep -v Keypair | grep -v 自分の端末のIPアドレス
+</code></pre><p>みたいな感じで絞れば気づけるかも？ (まだ観測していない)</p>
+<h4 id="firewalldでブラックリストを作る">Firewalldでブラックリストを作る<a href="#firewalldでブラックリストを作る" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h4>
+<p>さっきのWireGuardや <code>/var/log/nginx/access.log</code>などで怪しい履歴を見つけたら、
+IPアドレス単位でアクセスを拒否できるようにしましょう。</p>
+<pre tabindex="0"><code>## さくらのVPSにて、IPv4用のipsetを作成し対象をdropさせる
+# firewall-cmd --permanent --new-ipset=blacklist4 --type=hash:ip
+# firewall-cmd --permanent --zone=public --add-rich-rule=&#39;rule source ipset=blacklist4 drop&#39;
+
+## IPv6用はこんな感じ
+# firewall-cmd --permanent --new-ipset=blacklist6 --type=hash:net --option=family=inet6
+# firewall-cmd --permanent --zone=public --add-rich-rule=&#39;rule source ipset=blacklist6 drop&#39;
+
+## ブラックリストへの登録 (IPv6のほうもipsetを合わせるだけ)
+# firewall-cmd --permanent --ipset=blacklist4 --add-entry=A.B.C.D
+</code></pre><h4 id="selinuxを有効にする">SELinuxを有効にする<a href="#selinuxを有効にする" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h4>
+<p>これどっちかと言うと構築時の話ですね。
+さくらのVPSのスタートアップスクリプトのほうで有効化しちゃったので。</p>
+<p>その場合、sshdやnginxがブロックされてしまわないように
+コンテクストやブールをいじってあげる必要があるんですね。</p>
+<p>以下を読みながらなんとかしました。
+CentOS用の記事がまんま使えてよきですね。</p>
+<ul>
+<li><a href="https://milestone-of-se.nesuke.com/sv-basic/linux-basic/audit-log-ausearch/">https://milestone-of-se.nesuke.com/sv-basic/linux-basic/audit-log-ausearch/</a></li>
+<li><a href="https://tex2e.github.io/blog/selinux/dns-bind-change-port-with-selinux">https://tex2e.github.io/blog/selinux/dns-bind-change-port-with-selinux</a></li>
+<li><a href="https://qiita.com/worthmine/items/2bb6563fece396473ffc">https://qiita.com/worthmine/items/2bb6563fece396473ffc</a></li>
+</ul>
+<hr>
+<h3 id="2-バックアップを取ってインシデントに備える">2. バックアップを取ってインシデントに備える<a href="#2-バックアップを取ってインシデントに備える" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<p>ことActivityPubサーバに関しては、
+DBが吹っ飛ぶと同じドメインネームが使えなくなる仕様があり。
+先ほどの図のオンプレ側をいじります。</p>
+<h4 id="コンテナを丸ごとバックアップする">コンテナを丸ごとバックアップする<a href="#コンテナを丸ごとバックアップする" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h4>
+<p>LXCのストレージバックエンドでもBtrfsを使わせることで、
+スナップショット機能がこれを利用したものになるはずです。多分。</p>
+<p>コンテナの一時停止・スナップショット取得共に時間は掛からず、十数秒のダウンタイムで済みそうです。
+ただ、これだけではストレージ破損で逝ってしまうので
+(<a href="#%E6%B3%A8%E9%87%88">注2</a>)、</p>
+<ol>
+<li>スナップショット取得</li>
+<li>スナップショットからイメージを生成</li>
+<li>それを別のSSDにエクスポート</li>
+</ol>
+<p>までSystemd Timerで毎日実行しています。</p>
+<p>↓ Deskmini: <code>~/work/backup_lxc.sh</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e">#!/bin/bash
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>instance<span style="color:#f92672">=</span>$1  <span style="color:#75715e"># コマンドラインから渡してね</span>
+</span></span><span style="display:flex;"><span>now<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>date +%y%m%d_%H<span style="color:#66d9ef">)</span>
+</span></span><span style="display:flex;"><span>dir<span style="color:#f92672">=</span>/mnt/別のSSD/exported/$instance/
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>lxc snapshot $instance $now
+</span></span><span style="display:flex;"><span>lxc publish $instance/$now --alias $instance_$now
+</span></span><span style="display:flex;"><span>lxc image export $contain_$now $dir
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>lxc image delete $contain_$now
+</span></span></code></pre></div><p>先日レストア試験で復旧できそうってこともざっくりですが確認が取れました。 (N=1)。</p>
+<h4 id="添付ファイルを別途rsyncする">添付ファイルを別途rsyncする<a href="#添付ファイルを別途rsyncする" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h4>
+<p>これまたLXDの機能お試しを兼ね、ストレージボリュームなる仮想ディスクをさっきの別SSDの上で作り、
+コンテナにattachしています……つまりさっきのコンテナのデータとは別に管理しているんですね。</p>
+<p>コンテナの中からはいつも通りmountしているように見えるので、画像など添付ファイルを置いている
+<code>misskey/files/</code>をシンボリックリンクにしてあげるとその保存先を変えられる訳ですね。</p>
+<p>こちらは将来的に肥大化することも考え、ただの<code>rsync</code>で別のPCと同期させることにしました。
+メインPCのHDDに (比較的) 余裕があったので「たまにうっかり電源切ってて失敗してもええか」
+くらいの気分で
+(<a href="#%E6%B3%A8%E9%87%88">注3</a>)。
+毎晩22時なら起きているでしょう。多分。</p>
+<p>↓ LXC instance: <code>/etc/systemd/system/mi-data-bak.service</code></p>
+<pre tabindex="0"><code class="language-conf" data-lang="conf">[Unit]
+Description = Backup https://mi.tsujigoya.net/ media files
+
+[Service]
+Type = oneshot
+User = misskey
+Group = misskey
+ExecStart = /usr/bin/rsync -auv /mnt/ストレージボリューム/ メインPC:/mnt/d/バックアップ/
+</code></pre><p>↓ LXC instance: <code>/etc/systemd/system/mi-data-bak.timer</code></p>
+<pre tabindex="0"><code class="language-conf" data-lang="conf">[Unit]
+Description = Backup https://mi.tsujigoya.net/ media files
+
+[Timer]
+OnCalendar=*-*-* 22:00:00
+Persistent=true
+
+[Install]
+WantedBy=timers.target
+</code></pre><p>rsyncのリモートホスト名には、<code>~/.ssh/config</code> で設定したものが使えます。
+パスワード入力を不要にしておけば簡単に自動化できるという寸法ですね。</p>
+<p>先述のコンテナバックアップも <code>ExecStart</code>と時間が違うくらい。長いので省略。</p>
+<hr>
+<h3 id="3-パッケージを新しくする">3. パッケージを新しくする<a href="#3-パッケージを新しくする" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h3>
+<p>手動。再起動が必要になったりしますからね。</p>
+<p>まれにニュースサイトやTLで脆弱性や障害について情報が流れてくることもあるので、
+それとな～く普段から意識しておくのも良いかもしれません。</p>
+<h4 id="osのパッケージマネージャで更新をかける">OSのパッケージマネージャで更新をかける<a href="#osのパッケージマネージャで更新をかける" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h4>
+<p>RockyはともかくTumbleweedに関しては、
+同じローリングリリースのArch Linuxを1年ほど放置した結果キーイングに失敗して
+「あれ鍵の再生成どうやんだっけな～？」
+とかいって調べ始める、みたいなあるあるネタがあるのでちょっと用心した方がいいかも。</p>
+<p>なお、OpenSUSEの場合は<code>zypper up</code>のタイミングで勝手にスナップショットしてくれます。
+心臓に優しいですね。</p>
+<h4 id="misskey側の更新をかける">Misskey側の更新をかける<a href="#misskey側の更新をかける" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h4>
+<p>手動インストールなので <a href="https://misskey-hub.net/docs/install/manual.html">https://misskey-hub.net/docs/install/manual.html</a> の通りですね。</p>
+<p>「Node.jsとかどうやって入れたっけ？」
+なんてのも忘れないようメモっておくと後々困らないでしょう。</p>
+<hr>
+<h2 id="今後やりたいこと">今後やりたいこと<a href="#今後やりたいこと" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<p>先述のとおりだいぶやっつけなもんで……</p>
+<p>例えば今後オンプレ側でMisskey以外のサービスを増やして、
+それを同じリバースプロキシで公開するなら、
+WireGuardは別のコンテナに分けたほうがよいでしょうね。</p>
+<p>あとストレージが今までそれほど使っていなかった分、
+あまり手元に残っていないのでNASが欲しくなってきました。</p>
+<p>サーバの負荷 (ロードアベレージ) やRAMの使用率はかなり余裕があるので、
+もし私の体調が良くなったりしたら、
+招待制のまま利用者を募って実際にユーザを収容してみるのもいいかもしれません。</p>
+<h2 id="おわりに">おわりに<a href="#おわりに" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<p>思ったより長くなっちゃいましたね。3,000字とか久々に書きました。</p>
+<p>また140字くらいに収まるつぶやきがメインになりそうですが、
+たまにはこうしてマイクロじゃないほうのブログをやってみるのも楽しいものですね。
+ともかく、これからも気ままにやっていく所存でございますので、どうぞよしなに。</p>
+<p>あっ、よろしければチャンネル登録の代わりに
+<a href="/posts/links">SNSのフォロー</a>をお願いいたします。村雲ルネでした。</p>
+<h2 id="注釈">注釈<a href="#注釈" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<ol>
+<li>
+<p>ぶっちゃけ好み。探せばもっと安いVPSサービスは幾らでもあるはず、
+でも「最安プランだとIPv6非対応」なんてのもちょいちょい見かけるような？</p>
+</li>
+<li>
+<p>Btrfsについてはこちらの資料が詳しいです。ソフト的な変更をすぐに巻き戻せるイメージ。
+<a href="https://event.ospn.jp/osc2020-online-spring/session/61353">https://event.ospn.jp/osc2020-online-spring/session/61353</a></p>
+</li>
+<li>
+<p>今回WSL2めがけてSSHしているのですけれども、
+Windows側でファイアウォールを開けつつnetshでポートフォワーディング……でよかったのかなこれ？</p>
+</li>
+</ol>
+
+      </div></div>
+
+  
+    
+<div class="pagination">
+    <div class="pagination__title">
+        <span class="pagination__title-h">Read other posts</span>
+        <hr />
+    </div>
+    <div class="pagination__buttons">
+        
+        
+        <span class="button next">
+            <a href="https://renem2185.github.io/posts/links/">
+                <span class="button__text">Links</span>
+                <span class="button__icon">→</span>
+            </a>
+        </span>
+        
+    </div>
+</div>
+
+  
+
+  
+    
+
+  
+</article>
+
+  </div>
+
+  
+    <footer class="footer">
+  <div class="footer__inner">
+    
+      <div class="copyright copyright--user">
+        <span>Rene Murakumo</span>
+    
+      <span>:: <a href="https://github.com/panr/hugo-theme-terminal" target="_blank">Theme</a> made by <a href="https://github.com/panr" target="_blank">panr</a></span>
+      </div>
+  </div>
+</footer>
+
+
+
+
+
+
+<script type="text/javascript" src="/bundle.min.js"></script>
+
+
+
+
+
+  
+</div>
+
+</body>
+</html>

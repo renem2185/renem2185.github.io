@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Murakumo-san is distributed now</title>
-    <link>https://renem2185.github.io/</link>
-    <description>Recent content on Murakumo-san is distributed now</description>
+    <title>misskey on Murakumo-san is distributed now</title>
+    <link>https://renem2185.github.io/tags/misskey/</link>
+    <description>Recent content in misskey on Murakumo-san is distributed now</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Rene Murakumo</copyright>
-    <lastBuildDate>Thu, 07 Sep 2023 21:03:48 +0900</lastBuildDate><atom:link href="https://renem2185.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 07 Sep 2023 21:03:48 +0900</lastBuildDate><atom:link href="https://renem2185.github.io/tags/misskey/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Misskey個人サーバを立てたあとの管理みたいな話</title>
       <link>https://renem2185.github.io/posts/after_misskey_startup/</link>
@@ -235,148 +235,6 @@ WireGuardは別のコンテナに分けたほうがよいでしょうね。&lt;/
 Windows側でファイアウォールを開けつつnetshでポートフォワーディング……でよかったのかなこれ？&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ol&gt;
-</content>
-    </item>
-    
-    <item>
-      <title>Links</title>
-      <link>https://renem2185.github.io/posts/links/</link>
-      <pubDate>Sat, 26 Aug 2023 19:48:00 +0900</pubDate>
-      
-      <guid>https://renem2185.github.io/posts/links/</guid>
-      <description>だいたいこの辺におります X (Twitter) RTが多めだけど許して Fediverse Mastodonなどからでもフォローできます みすほわいと (Misskey) がっきー (Firefish) つじごや (個人鯖) note</description>
-      <content>&lt;p&gt;だいたいこの辺におります&lt;/p&gt;
-&lt;h3 id=&#34;x-twitterhttpstwittercomrene_murakumo&#34;&gt;&lt;a href=&#34;https://twitter.com/rene_murakumo&#34;&gt;X (Twitter)&lt;/a&gt;&lt;/h3&gt;
-&lt;p&gt;RTが多めだけど許して&lt;/p&gt;
-&lt;h3 id=&#34;fediverse&#34;&gt;Fediverse&lt;/h3&gt;
-&lt;p&gt;Mastodonなどからでもフォローできます&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;&lt;a href=&#34;https://mi.mashiro.site/@rene_murakumo&#34;&gt;みすほわいと (Misskey)&lt;/a&gt;&lt;/strong&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;&lt;a href=&#34;https://calckey.aokaga.work/@renem2185&#34;&gt;がっきー (Firefish)&lt;/a&gt;&lt;/strong&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;&lt;a href=&#34;https://mi.tsujigoya.net/@renem2185&#34;&gt;つじごや (個人鯖)&lt;/a&gt;&lt;/strong&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3 id=&#34;notehttpsnotecomrene_murakumo&#34;&gt;&lt;a href=&#34;https://note.com/rene_murakumo&#34;&gt;note&lt;/a&gt;&lt;/h3&gt;
-&lt;p&gt;作文して～！&lt;/p&gt;
-&lt;h3 id=&#34;pixivhttpswwwpixivnetusers70132785&#34;&gt;&lt;a href=&#34;https://www.pixiv.net/users/70132785&#34;&gt;pixiv&lt;/a&gt;&lt;/h3&gt;
-&lt;p&gt;絵も描きて～！！&lt;/p&gt;
-&lt;h3 id=&#34;youtubehttpswwwyoutubecomrene_murakumo&#34;&gt;&lt;a href=&#34;https://www.youtube.com/@rene_murakumo&#34;&gt;YouTube&lt;/a&gt;&lt;/h3&gt;
-&lt;p&gt;動画も作りて～！！！&lt;/p&gt;
-&lt;h3 id=&#34;niconicohttpswwwnicovideojpuser89913194&#34;&gt;&lt;a href=&#34;https://www.nicovideo.jp/user/89913194&#34;&gt;niconico&lt;/a&gt;&lt;/h3&gt;
-&lt;p&gt;VTuber活動にこだわらずにやっていき&lt;/p&gt;
-&lt;h3 id=&#34;githubhttpsgithubcomrenem2185&#34;&gt;&lt;a href=&#34;https://github.com/renem2185&#34;&gt;GitHub&lt;/a&gt;&lt;/h3&gt;
-&lt;p&gt;これから使う予定&lt;/p&gt;
-&lt;h3 id=&#34;togetterhttpstogettercomidrene_murakumo&#34;&gt;&lt;a href=&#34;https://togetter.com/id/rene_murakumo&#34;&gt;Togetter&lt;/a&gt;&lt;/h3&gt;
-&lt;p&gt;だいぶ前のツイートとか&lt;/p&gt;
-</content>
-    </item>
-    
-    <item>
-      <title>近況とか私の身体についてとか</title>
-      <link>https://renem2185.github.io/posts/about_my_health/</link>
-      <pubDate>Sat, 06 May 2023 00:44:53 +0900</pubDate>
-      
-      <guid>https://renem2185.github.io/posts/about_my_health/</guid>
-      <description>おつかれさまです、村雲ルネです。 私が大学院に進んだ辺りから療養と復帰を繰り返している件について、 一応書いておこうって思いまして。備忘録も兼ね</description>
-      <content>&lt;p&gt;おつかれさまです、村雲ルネです。&lt;/p&gt;
-&lt;p&gt;私が大学院に進んだ辺りから療養と復帰を繰り返している件について、
-一応書いておこうって思いまして。備忘録も兼ねて。&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;&lt;em&gt;&lt;strong&gt;NOTICE&lt;/strong&gt;&lt;/em&gt;&lt;/p&gt;
-&lt;p&gt;私は医師ではありません; ご自身の健康問題に関しては、専門の医療機関に相談してください&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;h2 id=&#34;tldr&#34;&gt;TL;DR&lt;/h2&gt;
-&lt;p&gt;実のところ、2021年夏頃に以下の診断を受けていました:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;片頭痛 (緊張型頭痛との混合型)&lt;/strong&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;起立性調節障害 / 起立性低血圧&lt;/strong&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;特に後者は5軒目くらいのお医者様でようやく判ったり、
-一度よくなったと思いかけたところでまた悪化したり、
-とまぁ学業がつらい状況がかれこれ1年以上続いたんですね&lt;/p&gt;
-&lt;p&gt;(もっと言うと20歳を過ぎて診断されるのは割と珍しいみたい？)&lt;/p&gt;
-&lt;p&gt;それで、今年の3月から始めたお薬が合いそうってことがようやく分かって、
-ちょっとずつ動けるようになって、
-少しずついい方向に進み始めたのかな？&lt;/p&gt;
-&lt;hr&gt;
-&lt;h2 id=&#34;つらいってのは具体的にどういう&#34;&gt;つらいってのは具体的にどういう？&lt;/h2&gt;
-&lt;blockquote&gt;
-&lt;ul&gt;
-&lt;li&gt;めまいと吐き気で立っているのも座っているのもきつい&lt;/li&gt;
-&lt;li&gt;頭痛で直前に何をしていたか忘れる、痛み止めは効くがそれまでは横になっているしかない&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;……動ける日は動けるのですが、そうでない日はまあこんな感じでして、
-まず大学に辿りつけないわ、
-無理に行ったところでおよそ使い物にならないわ、っていう。&lt;/p&gt;
-&lt;p&gt;あと前者については血圧を上げる薬で対処……しているはずなのですが、
-まぁだめな時はだめとしか。&lt;/p&gt;
-&lt;h2 id=&#34;何に気を付けて生活しているの&#34;&gt;何に気を付けて生活しているの？&lt;/h2&gt;
-&lt;p&gt;病名でggってもおよそ「医者にかかって生活習慣を改善しましょう」
-としか出てこないです。具体的には？ っていうのはきっとひとによるのでしょう。&lt;/p&gt;
-&lt;h3 id=&#34;朝の支度とか&#34;&gt;朝の支度とか&lt;/h3&gt;
-&lt;p&gt;なるべく決まった時間に起きて朝ごはんを食べてお日様を浴びて……
-というのが理想なのですが、これがなかなか一筋縄ではいかないのですよね。&lt;/p&gt;
-&lt;p&gt;強いて言えば、敷きパッドを追加してベッドの硬さを調整したり、
-枕をちょっといいやつに変えてから、多少はマシになったような？ [要出典]&lt;/p&gt;
-&lt;p&gt;それと、ノイズキャンセリングヘッドフォンを持ち歩くようになりました。&lt;/p&gt;
-&lt;p&gt;片頭痛で聴覚が過敏になる場合があるそうで、
-工事の音や公共スペースのテレビみたいな物音が、
-自分で思っている以上に負担になってしまうようです。&lt;/p&gt;
-&lt;p&gt;それと運動。散歩とか、ラジオ体操とか？&lt;/p&gt;
-&lt;p&gt;それでも気温差とか気圧とか前日の疲労、
-その他諸々でだめなときはどうしてもあるので
-まぁなんというか、無理はしないっていう心持ちで。&lt;/p&gt;
-&lt;h3 id=&#34;学業とか&#34;&gt;学業とか&lt;/h3&gt;
-&lt;p&gt;まだ週5で通うのは当面難しそうなので、
-リモートワークを交えながら少しずつ研究を再開、
-みたいな感じで教授とも概ね話がまとまりました (まじでよかった)&lt;/p&gt;
-&lt;p&gt;職探しは一旦後回しで。しゃーなし。&lt;/p&gt;
-&lt;p&gt;あとは座りっぱなしを避け、時々立ってストレッチをしたり、
-水分をこまめに摂ったり、みたいな感じでおります。&lt;/p&gt;
-&lt;p&gt;それでも軽めの頭痛とかは――私の場合ほぼ毎日来るので、
-痛み止めを服用しつつ「頭痛ダイアリー」に記録を残すことで
-次に繋げられるようにできたらなぁって。&lt;/p&gt;
-&lt;p&gt;最近は朝起きた時間とか活動量なんかもまとめて記録して、
-お医者様に見せられるようにしています。&lt;/p&gt;
-&lt;h3 id=&#34;家に帰った後とか&#34;&gt;家に帰った後とか&lt;/h3&gt;
-&lt;p&gt;重要なのはお風呂ですかね、湯船できちんと身体を温めること。&lt;/p&gt;
-&lt;p&gt;自転車で行ける距離の場所にサウナがあるので、
-時々通うようにしたら良い感じになったりしないかな……？&lt;/p&gt;
-&lt;p&gt;それにご飯を摂ること。もとが小食なので、これも意識的に
-やっていく必要があるようです。&lt;/p&gt;
-&lt;p&gt;ただこれ、沢山食べても胃腸で消化吸収できないといけないみたいで。
-私の場合は漢方薬局に相談しにいって初めて気づけたのですよね。
-これまた長い目でやっていく必要がありそうです。&lt;/p&gt;
-&lt;p&gt;あと22時以降はブルーライトを控える――
-これはまだ上手くいってませんね、ついつい呟きを……&lt;/p&gt;
-&lt;hr&gt;
-&lt;h2 id=&#34;future&#34;&gt;Future&lt;/h2&gt;
-&lt;p&gt;ちょっとずつ創作もやってきたいなぁ、
-という気持ちは今も変わらず持ち続けております。
-落書きなんかはこれからもぼちぼち投下していきたいですね。&lt;/p&gt;
-&lt;p&gt;ただ自分の身体のことを優先せざるを得ないということもあって、
-例えばVTuberっぽい活動、とかってなるとなかなか先の長い話になりそうですね、
-これは前にも言った気がしますが。&lt;/p&gt;
-&lt;p&gt;こんな私を忘れずにいてくださったかた、
-最近になって私を見つけてくださったかた、
-皆さまに感謝を込めて。&lt;/p&gt;
-&lt;p&gt;2023.05.06 村雲ルネ&lt;/p&gt;
-</content>
-    </item>
-    
-    <item>
-      <title>About</title>
-      <link>https://renem2185.github.io/posts/about/</link>
-      <pubDate>Thu, 04 May 2023 18:40:00 +0900</pubDate>
-      
-      <guid>https://renem2185.github.io/posts/about/</guid>
-      <description>村雲ルネ (Rene Murakumo) と申します ひとのふりをして大学院生をやっているひつじです</description>
-      <content>
-  &lt;img src=&#34;https://renem2185.github.io/img/5kY6_cEZ_400x400.jpg&#34;  alt=&#34;Rene M. Portrait&#34;  class=&#34;left&#34;  style=&#34;width: 200px; height: 200px;&#34;  /&gt;
-
-
-&lt;p&gt;村雲ルネ (Rene Murakumo) と申します&lt;/p&gt;
-&lt;p&gt;ひとのふりをして大学院生をやっているひつじです&lt;/p&gt;
 </content>
     </item>
     
