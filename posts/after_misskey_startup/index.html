@@ -200,7 +200,8 @@
 <h4 id="オンプレ側">オンプレ側<a href="#オンプレ側" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h4>
 <p>DeskminiっていうミニPCなのですが、以前VMを試していたらちょっと重く感じたので、
 より軽量なLinux Container (LXC) とLXDで仮想化しています。
-DeskminiというかCPUがちょっと古くて4コア8スレッドなので多分それなんですけれども。</p>
+DeskminiというかCPUがちょっと古くて4コア8スレッドなので多分それなんですけれども
+(<a href="#%E6%B3%A8%E9%87%88">注2</a>)。</p>
 <p>それとホストOS側・コンテナ側共にディストロはOpenSUSE Tumbleweedにしました。
 <del>Btrfsが使えれば何でもいい説はある。</del></p>
 <h2 id="ほんへ">ほんへ<a href="#ほんへ" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
@@ -286,7 +287,7 @@ DBが吹っ飛ぶと同じドメインネームが使えなくなる仕様があ
 スナップショット機能がこれを利用したものになるはずです。多分。</p>
 <p>コンテナの一時停止・スナップショット取得共に時間は掛からず、十数秒のダウンタイムで済みそうです。
 ただ、これだけではストレージ破損で逝ってしまうので
-(<a href="#%E6%B3%A8%E9%87%88">注2</a>)、</p>
+(<a href="#%E6%B3%A8%E9%87%88">注3</a>)、</p>
 <ol>
 <li>スナップショット取得</li>
 <li>スナップショットからイメージを生成</li>
@@ -305,7 +306,7 @@ DBが吹っ飛ぶと同じドメインネームが使えなくなる仕様があ
 </span></span><span style="display:flex;"><span>lxc image export $contain_$now $dir
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>lxc image delete $contain_$now
-</span></span></code></pre></div><p>先日レストア試験で復旧できそうってこともざっくりですが確認が取れました。 (N=1)。</p>
+</span></span></code></pre></div><p>先日レストア試験で復旧できそうってこともざっくりですが確認が取れました (N=1)。</p>
 <h4 id="添付ファイルを別途rsyncする">添付ファイルを別途rsyncする<a href="#添付ファイルを別途rsyncする" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h4>
 <p>これまたLXDの機能お試しを兼ね、ストレージボリュームなる仮想ディスクをさっきの別SSDの上で作り、
 コンテナにattachしています……つまりさっきのコンテナのデータとは別に管理しているんですね。</p>
@@ -314,7 +315,7 @@ DBが吹っ飛ぶと同じドメインネームが使えなくなる仕様があ
 <p>こちらは将来的に肥大化することも考え、ただの<code>rsync</code>で別のPCと同期させることにしました。
 メインPCのHDDに (比較的) 余裕があったので「たまにうっかり電源切ってて失敗してもええか」
 くらいの気分で
-(<a href="#%E6%B3%A8%E9%87%88">注3</a>)。
+(<a href="#%E6%B3%A8%E9%87%88">注4</a>)。
 毎晩22時なら起きているでしょう。多分。</p>
 <p>↓ LXC instance: <code>/etc/systemd/system/mi-data-bak.service</code></p>
 <pre tabindex="0"><code class="language-conf" data-lang="conf">[Unit]
@@ -372,11 +373,16 @@ WireGuardは別のコンテナに分けたほうがよいでしょうね。</p>
 ともかく、これからも気ままにやっていく所存でございますので、どうぞよしなに。</p>
 <p>あっ、よろしければチャンネル登録の代わりに
 <a href="/posts/links">SNSのフォロー</a>をお願いいたします。村雲ルネでした。</p>
+<hr>
+<p>2023.09.09 投稿、直後に誤字修正、注釈追加</p>
 <h2 id="注釈">注釈<a href="#注釈" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
 <ol>
 <li>
 <p>ぶっちゃけ好み。探せばもっと安いVPSサービスは幾らでもあるはず、
 でも「最安プランだとIPv6非対応」なんてのもちょいちょい見かけるような？</p>
+</li>
+<li>
+<p>当時Deskmini A300に載せられるもので一番良さそうだった Ryzen 5 3400Gという石です。</p>
 </li>
 <li>
 <p>Btrfsについてはこちらの資料が詳しいです。ソフト的な変更をすぐに巻き戻せるイメージ。

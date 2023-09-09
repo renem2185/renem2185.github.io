@@ -7,7 +7,243 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Rene Murakumo</copyright>
-    <lastBuildDate>Sat, 26 Aug 2023 19:48:00 +0900</lastBuildDate><atom:link href="https://renem2185.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 07 Sep 2023 21:03:48 +0900</lastBuildDate><atom:link href="https://renem2185.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Misskey個人サーバを立てたあとの管理みたいな話</title>
+      <link>https://renem2185.github.io/posts/after_misskey_startup/</link>
+      <pubDate>Thu, 07 Sep 2023 21:03:48 +0900</pubDate>
+      
+      <guid>https://renem2185.github.io/posts/after_misskey_startup/</guid>
+      <description>鯖缶の務め is 何？ はじめに おつかれさまです、村雲です。 ここしばらくは本当に色々あり、Misskeyはよき現実逃避として機能していたかと思われま</description>
+      <content>&lt;blockquote&gt;
+&lt;p&gt;鯖缶の務め is 何？&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&#34;はじめに&#34;&gt;はじめに&lt;/h2&gt;
+&lt;p&gt;おつかれさまです、村雲です。&lt;/p&gt;
+&lt;p&gt;ここしばらくは本当に色々あり、Misskeyはよき現実逃避として機能していたかと思われます。
+関わってくださった皆様、いつもありがとうございます。いや本当に。&lt;/p&gt;
+&lt;p&gt;辛うじて動ける隙間時間みたいなものをかき集めて自分の個人鯖を構築してからは、
+こちらのブログもどきそっちのけでマイクロブログのほうをやっちゃっておりますね。
+こちらのほうが私に合っているのでしょうか？&lt;/p&gt;
+&lt;p&gt;ともかく、今回は私のできたてほやほやな個人鯖
+&lt;a href=&#34;https://mi.tsujigoya.net/&#34;&gt;「つじごや」&lt;/a&gt;
+の運用について書いていこうかと。
+と言ってもおひとりさま前提の手抜き仕様なんですけど。&lt;/p&gt;
+&lt;h2 id=&#34;背景-うちの構成&#34;&gt;背景: うちの構成&lt;/h2&gt;
+&lt;p&gt;本編の前に、うちの現環境について軽くさらっていこうかと。&lt;/p&gt;
+
+  &lt;img src=&#34;https://renem2185.github.io/img/misskey_topology_1.png&#34;  alt=&#34;つじごや鯖構成図&#34;  class=&#34;left&#34;  /&gt;
+
+
+&lt;p&gt;リバースプロキシだけさくらのVPSに置き、残りをオンプレミス (越したばかりの自室) で構築、
+両者をWireGuard VPNのトンネルで繋ぐようにしました。&lt;/p&gt;
+&lt;p&gt;一応はVのものを自称している以上、
+グローバルIPアドレスは隠しておきたいなっていう意図です。&lt;/p&gt;
+&lt;h4 id=&#34;vps側&#34;&gt;VPS側&lt;/h4&gt;
+&lt;p&gt;さくらのVPSの最安である &lt;code&gt;512M&lt;/code&gt; プランですが、Nginxだけ、かつ今の規模なら余裕そうです。
+おかげさまでIPv4 / IPv6両方のグローバルアドレスを持った子が月643JPYです。
+お得 (&lt;a href=&#34;#%E6%B3%A8%E9%87%88&#34;&gt;注1&lt;/a&gt;)。&lt;/p&gt;
+&lt;p&gt;それと初めてRocky Linux 9を使いました。
+そこそこ新しいパッケージが降ってくるCentOS、みたいな使用感？&lt;/p&gt;
+&lt;h4 id=&#34;オンプレ側&#34;&gt;オンプレ側&lt;/h4&gt;
+&lt;p&gt;DeskminiっていうミニPCなのですが、以前VMを試していたらちょっと重く感じたので、
+より軽量なLinux Container (LXC) とLXDで仮想化しています。
+DeskminiというかCPUがちょっと古くて4コア8スレッドなので多分それなんですけれども
+(&lt;a href=&#34;#%E6%B3%A8%E9%87%88&#34;&gt;注2&lt;/a&gt;)。&lt;/p&gt;
+&lt;p&gt;それとホストOS側・コンテナ側共にディストロはOpenSUSE Tumbleweedにしました。
+&lt;del&gt;Btrfsが使えれば何でもいい説はある。&lt;/del&gt;&lt;/p&gt;
+&lt;h2 id=&#34;ほんへ&#34;&gt;ほんへ&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;&lt;a href=&#34;https://log.sda1.net/blog/misskey-advent-2022/&#34;&gt;nexryaiさまのこちらの記事&lt;/a&gt;&lt;/strong&gt;
+がたいへん充実しておりますので、ぜひご一読を。&lt;/p&gt;
+&lt;p&gt;以下に私の&lt;del&gt;ガバガバ&lt;/del&gt;運用をまとめます。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;a href=&#34;#1-%E5%85%AC%E9%96%8B%E3%82%B5%E3%83%BC%E3%83%90%E3%82%92%E5%AE%89%E5%85%A8%E3%81%AB%E3%81%99%E3%82%8B&#34;&gt;ファイアウォール&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#2-%E3%83%90%E3%83%83%E3%82%AF%E3%82%A2%E3%83%83%E3%83%97%E3%82%92%E5%8F%96%E3%81%A3%E3%81%A6%E3%82%A4%E3%83%B3%E3%82%B7%E3%83%87%E3%83%B3%E3%83%88%E3%81%AB%E5%82%99%E3%81%88%E3%82%8B&#34;&gt;バックアップ&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#3-%E3%83%91%E3%83%83%E3%82%B1%E3%83%BC%E3%82%B8%E3%82%92%E6%96%B0%E3%81%97%E3%81%8F%E3%81%99%E3%82%8B&#34;&gt;パッケージ更新&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;みたいに分けてみました。&lt;/p&gt;
+&lt;h3 id=&#34;1-公開サーバを安全にする&#34;&gt;1. 公開サーバを安全にする&lt;/h3&gt;
+&lt;p&gt;セキュリティなんもわからん……&lt;/p&gt;
+&lt;p&gt;うちの場合、主に直接外に公開しているVPS側の対策になります。&lt;/p&gt;
+&lt;h4 id=&#34;sshポートを外部から隠す&#34;&gt;SSHポートを外部から隠す&lt;/h4&gt;
+&lt;p&gt;&lt;code&gt;22/TCP&lt;/code&gt;以外に変更しても &lt;code&gt;/var/log/secure&lt;/code&gt;が埋まりがちだったので、
+グローバルIPへ直接SSHしに行くのではなく、トンネルを経由させるようにしました。&lt;/p&gt;
+&lt;p&gt;うちだと少々回りくどいですが、
+上図のメインPCから一度LXCインスタンスを踏み台にして、
+それからトンネルの向こうの鯖に、といった具合に。&lt;/p&gt;
+&lt;p&gt;↓ Main PC: &lt;code&gt;~/.ssh/config&lt;/code&gt;&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code class=&#34;language-conf&#34; data-lang=&#34;conf&#34;&gt;Host さくらのVPS               # お好きな名前で
+    ProxyJump LXCインスタンス   # 別途configに記述
+    Port SSHのポート番号        # 22番に戻していない
+    Hostname A.B.C.D          # VPSのLAN用アドレス、今回はDummy I/Fを使用
+    User ログインユーザ名
+    IdentityFile /path/to/鍵_ed25519
+    IdentitiesOnly yes
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;そしたらファイアウォールでSSHのポートを塞いじゃいましょう。
+Rockyの標準であるFirewalldを使っています。&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;## さくらのVPSにて
+# firewall-cmd --remove-service=ssh --zone=public
+
+## 一時的に塞いでもSSHが途切れないことを確認してから
+# firewall-cmd --remove-service=ssh --zone=public --permanent
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;それと&lt;em&gt;&lt;strong&gt;トンネルはトンネルで&lt;/strong&gt;&lt;/em&gt; 公開ポート番号をデフォルトから変更するとか、
+時々更新をチェックするとか、必要な対策を施せるとよいかなと。&lt;/p&gt;
+&lt;h4 id=&#34;wireguardのログを確認する&#34;&gt;WireGuardのログを確認する&lt;/h4&gt;
+&lt;p&gt;デフォルトだと記録されないようですが、
+ダイナミックデバッグなるものを有効化することでカーネルリングバッファに出力させて
+&lt;code&gt;dmesg&lt;/code&gt;で読めるようになります。&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;## さくらのVPSにて、設定をする
+# echo module wireguard +p &amp;gt; /sys/kernel/debug/dynamic_debug/control
+
+## ログを読む
+$ dmesg | grep wireguard  # インターフェース名で絞ってもいいかも
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;例えば自分以外の誰かが侵入を試みていたら&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;$ dmesg | grep wg0 | grep -v Keypair | grep -v 自分の端末のIPアドレス
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;みたいな感じで絞れば気づけるかも？ (まだ観測していない)&lt;/p&gt;
+&lt;h4 id=&#34;firewalldでブラックリストを作る&#34;&gt;Firewalldでブラックリストを作る&lt;/h4&gt;
+&lt;p&gt;さっきのWireGuardや &lt;code&gt;/var/log/nginx/access.log&lt;/code&gt;などで怪しい履歴を見つけたら、
+IPアドレス単位でアクセスを拒否できるようにしましょう。&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;## さくらのVPSにて、IPv4用のipsetを作成し対象をdropさせる
+# firewall-cmd --permanent --new-ipset=blacklist4 --type=hash:ip
+# firewall-cmd --permanent --zone=public --add-rich-rule=&amp;#39;rule source ipset=blacklist4 drop&amp;#39;
+
+## IPv6用はこんな感じ
+# firewall-cmd --permanent --new-ipset=blacklist6 --type=hash:net --option=family=inet6
+# firewall-cmd --permanent --zone=public --add-rich-rule=&amp;#39;rule source ipset=blacklist6 drop&amp;#39;
+
+## ブラックリストへの登録 (IPv6のほうもipsetを合わせるだけ)
+# firewall-cmd --permanent --ipset=blacklist4 --add-entry=A.B.C.D
+&lt;/code&gt;&lt;/pre&gt;&lt;h4 id=&#34;selinuxを有効にする&#34;&gt;SELinuxを有効にする&lt;/h4&gt;
+&lt;p&gt;これどっちかと言うと構築時の話ですね。
+さくらのVPSのスタートアップスクリプトのほうで有効化しちゃったので。&lt;/p&gt;
+&lt;p&gt;その場合、sshdやnginxがブロックされてしまわないように
+コンテクストやブールをいじってあげる必要があるんですね。&lt;/p&gt;
+&lt;p&gt;以下を読みながらなんとかしました。
+CentOS用の記事がまんま使えてよきですね。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://milestone-of-se.nesuke.com/sv-basic/linux-basic/audit-log-ausearch/&#34;&gt;https://milestone-of-se.nesuke.com/sv-basic/linux-basic/audit-log-ausearch/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://tex2e.github.io/blog/selinux/dns-bind-change-port-with-selinux&#34;&gt;https://tex2e.github.io/blog/selinux/dns-bind-change-port-with-selinux&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://qiita.com/worthmine/items/2bb6563fece396473ffc&#34;&gt;https://qiita.com/worthmine/items/2bb6563fece396473ffc&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h3 id=&#34;2-バックアップを取ってインシデントに備える&#34;&gt;2. バックアップを取ってインシデントに備える&lt;/h3&gt;
+&lt;p&gt;ことActivityPubサーバに関しては、
+DBが吹っ飛ぶと同じドメインネームが使えなくなる仕様があり。
+先ほどの図のオンプレ側をいじります。&lt;/p&gt;
+&lt;h4 id=&#34;コンテナを丸ごとバックアップする&#34;&gt;コンテナを丸ごとバックアップする&lt;/h4&gt;
+&lt;p&gt;LXCのストレージバックエンドでもBtrfsを使わせることで、
+スナップショット機能がこれを利用したものになるはずです。多分。&lt;/p&gt;
+&lt;p&gt;コンテナの一時停止・スナップショット取得共に時間は掛からず、十数秒のダウンタイムで済みそうです。
+ただ、これだけではストレージ破損で逝ってしまうので
+(&lt;a href=&#34;#%E6%B3%A8%E9%87%88&#34;&gt;注3&lt;/a&gt;)、&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;スナップショット取得&lt;/li&gt;
+&lt;li&gt;スナップショットからイメージを生成&lt;/li&gt;
+&lt;li&gt;それを別のSSDにエクスポート&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;までSystemd Timerで毎日実行しています。&lt;/p&gt;
+&lt;p&gt;↓ Deskmini: &lt;code&gt;~/work/backup_lxc.sh&lt;/code&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#!/bin/bash
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;instance&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;$1  &lt;span style=&#34;color:#75715e&#34;&gt;# コマンドラインから渡してね&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;now&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;$(&lt;/span&gt;date +%y%m%d_%H&lt;span style=&#34;color:#66d9ef&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;dir&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;/mnt/別のSSD/exported/$instance/
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;lxc snapshot $instance $now
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;lxc publish $instance/$now --alias $instance_$now
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;lxc image export $contain_$now $dir
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;lxc image delete $contain_$now
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;先日レストア試験で復旧できそうってこともざっくりですが確認が取れました (N=1)。&lt;/p&gt;
+&lt;h4 id=&#34;添付ファイルを別途rsyncする&#34;&gt;添付ファイルを別途rsyncする&lt;/h4&gt;
+&lt;p&gt;これまたLXDの機能お試しを兼ね、ストレージボリュームなる仮想ディスクをさっきの別SSDの上で作り、
+コンテナにattachしています……つまりさっきのコンテナのデータとは別に管理しているんですね。&lt;/p&gt;
+&lt;p&gt;コンテナの中からはいつも通りmountしているように見えるので、画像など添付ファイルを置いている
+&lt;code&gt;misskey/files/&lt;/code&gt;をシンボリックリンクにしてあげるとその保存先を変えられる訳ですね。&lt;/p&gt;
+&lt;p&gt;こちらは将来的に肥大化することも考え、ただの&lt;code&gt;rsync&lt;/code&gt;で別のPCと同期させることにしました。
+メインPCのHDDに (比較的) 余裕があったので「たまにうっかり電源切ってて失敗してもええか」
+くらいの気分で
+(&lt;a href=&#34;#%E6%B3%A8%E9%87%88&#34;&gt;注4&lt;/a&gt;)。
+毎晩22時なら起きているでしょう。多分。&lt;/p&gt;
+&lt;p&gt;↓ LXC instance: &lt;code&gt;/etc/systemd/system/mi-data-bak.service&lt;/code&gt;&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code class=&#34;language-conf&#34; data-lang=&#34;conf&#34;&gt;[Unit]
+Description = Backup https://mi.tsujigoya.net/ media files
+
+[Service]
+Type = oneshot
+User = misskey
+Group = misskey
+ExecStart = /usr/bin/rsync -auv /mnt/ストレージボリューム/ メインPC:/mnt/d/バックアップ/
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;↓ LXC instance: &lt;code&gt;/etc/systemd/system/mi-data-bak.timer&lt;/code&gt;&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code class=&#34;language-conf&#34; data-lang=&#34;conf&#34;&gt;[Unit]
+Description = Backup https://mi.tsujigoya.net/ media files
+
+[Timer]
+OnCalendar=*-*-* 22:00:00
+Persistent=true
+
+[Install]
+WantedBy=timers.target
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;rsyncのリモートホスト名には、&lt;code&gt;~/.ssh/config&lt;/code&gt; で設定したものが使えます。
+パスワード入力を不要にしておけば簡単に自動化できるという寸法ですね。&lt;/p&gt;
+&lt;p&gt;先述のコンテナバックアップも &lt;code&gt;ExecStart&lt;/code&gt;と時間が違うくらい。長いので省略。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h3 id=&#34;3-パッケージを新しくする&#34;&gt;3. パッケージを新しくする&lt;/h3&gt;
+&lt;p&gt;手動。再起動が必要になったりしますからね。&lt;/p&gt;
+&lt;p&gt;まれにニュースサイトやTLで脆弱性や障害について情報が流れてくることもあるので、
+それとな～く普段から意識しておくのも良いかもしれません。&lt;/p&gt;
+&lt;h4 id=&#34;osのパッケージマネージャで更新をかける&#34;&gt;OSのパッケージマネージャで更新をかける&lt;/h4&gt;
+&lt;p&gt;RockyはともかくTumbleweedに関しては、
+同じローリングリリースのArch Linuxを1年ほど放置した結果キーイングに失敗して
+「あれ鍵の再生成どうやんだっけな～？」
+とかいって調べ始める、みたいなあるあるネタがあるのでちょっと用心した方がいいかも。&lt;/p&gt;
+&lt;p&gt;なお、OpenSUSEの場合は&lt;code&gt;zypper up&lt;/code&gt;のタイミングで勝手にスナップショットしてくれます。
+心臓に優しいですね。&lt;/p&gt;
+&lt;h4 id=&#34;misskey側の更新をかける&#34;&gt;Misskey側の更新をかける&lt;/h4&gt;
+&lt;p&gt;手動インストールなので &lt;a href=&#34;https://misskey-hub.net/docs/install/manual.html&#34;&gt;https://misskey-hub.net/docs/install/manual.html&lt;/a&gt; の通りですね。&lt;/p&gt;
+&lt;p&gt;「Node.jsとかどうやって入れたっけ？」
+なんてのも忘れないようメモっておくと後々困らないでしょう。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;今後やりたいこと&#34;&gt;今後やりたいこと&lt;/h2&gt;
+&lt;p&gt;先述のとおりだいぶやっつけなもんで……&lt;/p&gt;
+&lt;p&gt;例えば今後オンプレ側でMisskey以外のサービスを増やして、
+それを同じリバースプロキシで公開するなら、
+WireGuardは別のコンテナに分けたほうがよいでしょうね。&lt;/p&gt;
+&lt;p&gt;あとストレージが今までそれほど使っていなかった分、
+あまり手元に残っていないのでNASが欲しくなってきました。&lt;/p&gt;
+&lt;p&gt;サーバの負荷 (ロードアベレージ) やRAMの使用率はかなり余裕があるので、
+もし私の体調が良くなったりしたら、
+招待制のまま利用者を募って実際にユーザを収容してみるのもいいかもしれません。&lt;/p&gt;
+&lt;h2 id=&#34;おわりに&#34;&gt;おわりに&lt;/h2&gt;
+&lt;p&gt;思ったより長くなっちゃいましたね。3,000字とか久々に書きました。&lt;/p&gt;
+&lt;p&gt;また140字くらいに収まるつぶやきがメインになりそうですが、
+たまにはこうしてマイクロじゃないほうのブログをやってみるのも楽しいものですね。
+ともかく、これからも気ままにやっていく所存でございますので、どうぞよしなに。&lt;/p&gt;
+&lt;p&gt;あっ、よろしければチャンネル登録の代わりに
+&lt;a href=&#34;https://renem2185.github.io/posts/links&#34;&gt;SNSのフォロー&lt;/a&gt;をお願いいたします。村雲ルネでした。&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;2023.09.09 投稿、直後に誤字修正、注釈追加&lt;/p&gt;
+&lt;h2 id=&#34;注釈&#34;&gt;注釈&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;ぶっちゃけ好み。探せばもっと安いVPSサービスは幾らでもあるはず、
+でも「最安プランだとIPv6非対応」なんてのもちょいちょい見かけるような？&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;当時Deskmini A300に載せられるもので一番良さそうだった Ryzen 5 3400Gという石です。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Btrfsについてはこちらの資料が詳しいです。ソフト的な変更をすぐに巻き戻せるイメージ。
+&lt;a href=&#34;https://event.ospn.jp/osc2020-online-spring/session/61353&#34;&gt;https://event.ospn.jp/osc2020-online-spring/session/61353&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;今回WSL2めがけてSSHしているのですけれども、
+Windows側でファイアウォールを開けつつnetshでポートフォワーディング……でよかったのかなこれ？&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+</content>
+    </item>
+    
     <item>
       <title>Links</title>
       <link>https://renem2185.github.io/posts/links/</link>

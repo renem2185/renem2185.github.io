@@ -48,7 +48,8 @@
 &lt;h4 id=&#34;オンプレ側&#34;&gt;オンプレ側&lt;/h4&gt;
 &lt;p&gt;DeskminiっていうミニPCなのですが、以前VMを試していたらちょっと重く感じたので、
 より軽量なLinux Container (LXC) とLXDで仮想化しています。
-DeskminiというかCPUがちょっと古くて4コア8スレッドなので多分それなんですけれども。&lt;/p&gt;
+DeskminiというかCPUがちょっと古くて4コア8スレッドなので多分それなんですけれども
+(&lt;a href=&#34;#%E6%B3%A8%E9%87%88&#34;&gt;注2&lt;/a&gt;)。&lt;/p&gt;
 &lt;p&gt;それとホストOS側・コンテナ側共にディストロはOpenSUSE Tumbleweedにしました。
 &lt;del&gt;Btrfsが使えれば何でもいい説はある。&lt;/del&gt;&lt;/p&gt;
 &lt;h2 id=&#34;ほんへ&#34;&gt;ほんへ&lt;/h2&gt;
@@ -134,7 +135,7 @@ DBが吹っ飛ぶと同じドメインネームが使えなくなる仕様があ
 スナップショット機能がこれを利用したものになるはずです。多分。&lt;/p&gt;
 &lt;p&gt;コンテナの一時停止・スナップショット取得共に時間は掛からず、十数秒のダウンタイムで済みそうです。
 ただ、これだけではストレージ破損で逝ってしまうので
-(&lt;a href=&#34;#%E6%B3%A8%E9%87%88&#34;&gt;注2&lt;/a&gt;)、&lt;/p&gt;
+(&lt;a href=&#34;#%E6%B3%A8%E9%87%88&#34;&gt;注3&lt;/a&gt;)、&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;スナップショット取得&lt;/li&gt;
 &lt;li&gt;スナップショットからイメージを生成&lt;/li&gt;
@@ -153,7 +154,7 @@ DBが吹っ飛ぶと同じドメインネームが使えなくなる仕様があ
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;lxc image export $contain_$now $dir
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;lxc image delete $contain_$now
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;先日レストア試験で復旧できそうってこともざっくりですが確認が取れました。 (N=1)。&lt;/p&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;先日レストア試験で復旧できそうってこともざっくりですが確認が取れました (N=1)。&lt;/p&gt;
 &lt;h4 id=&#34;添付ファイルを別途rsyncする&#34;&gt;添付ファイルを別途rsyncする&lt;/h4&gt;
 &lt;p&gt;これまたLXDの機能お試しを兼ね、ストレージボリュームなる仮想ディスクをさっきの別SSDの上で作り、
 コンテナにattachしています……つまりさっきのコンテナのデータとは別に管理しているんですね。&lt;/p&gt;
@@ -162,7 +163,7 @@ DBが吹っ飛ぶと同じドメインネームが使えなくなる仕様があ
 &lt;p&gt;こちらは将来的に肥大化することも考え、ただの&lt;code&gt;rsync&lt;/code&gt;で別のPCと同期させることにしました。
 メインPCのHDDに (比較的) 余裕があったので「たまにうっかり電源切ってて失敗してもええか」
 くらいの気分で
-(&lt;a href=&#34;#%E6%B3%A8%E9%87%88&#34;&gt;注3&lt;/a&gt;)。
+(&lt;a href=&#34;#%E6%B3%A8%E9%87%88&#34;&gt;注4&lt;/a&gt;)。
 毎晩22時なら起きているでしょう。多分。&lt;/p&gt;
 &lt;p&gt;↓ LXC instance: &lt;code&gt;/etc/systemd/system/mi-data-bak.service&lt;/code&gt;&lt;/p&gt;
 &lt;pre tabindex=&#34;0&#34;&gt;&lt;code class=&#34;language-conf&#34; data-lang=&#34;conf&#34;&gt;[Unit]
@@ -220,11 +221,16 @@ WireGuardは別のコンテナに分けたほうがよいでしょうね。&lt;/
 ともかく、これからも気ままにやっていく所存でございますので、どうぞよしなに。&lt;/p&gt;
 &lt;p&gt;あっ、よろしければチャンネル登録の代わりに
 &lt;a href=&#34;https://renem2185.github.io/posts/links&#34;&gt;SNSのフォロー&lt;/a&gt;をお願いいたします。村雲ルネでした。&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;2023.09.09 投稿、直後に誤字修正、注釈追加&lt;/p&gt;
 &lt;h2 id=&#34;注釈&#34;&gt;注釈&lt;/h2&gt;
 &lt;ol&gt;
 &lt;li&gt;
 &lt;p&gt;ぶっちゃけ好み。探せばもっと安いVPSサービスは幾らでもあるはず、
 でも「最安プランだとIPv6非対応」なんてのもちょいちょい見かけるような？&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;当時Deskmini A300に載せられるもので一番良さそうだった Ryzen 5 3400Gという石です。&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;Btrfsについてはこちらの資料が詳しいです。ソフト的な変更をすぐに巻き戻せるイメージ。
