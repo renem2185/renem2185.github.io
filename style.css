@@ -3,5 +3,11 @@
 }
 
 body {
-  background-color: #36393f
+  background-image: url('/img/frustration.png');
+  background-attachment: fixed;
+  background-size: auto;
+  background-position: right bottom;
+  background-repeat:no-repeat;
+
+  background-color: #36393f;
 }
