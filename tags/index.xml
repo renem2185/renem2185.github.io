@@ -7,7 +7,57 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Rene Murakumo</copyright>
-    <lastBuildDate>Sun, 14 Jan 2024 19:19:10 +0900</lastBuildDate><atom:link href="https://renem2185.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 16 Mar 2024 16:53:28 +0900</lastBuildDate><atom:link href="https://renem2185.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>brainf*ck</title>
+      <link>https://renem2185.github.io/tags/brainfck/</link>
+      <pubDate>Sat, 16 Mar 2024 16:53:28 +0900</pubDate>
+      
+      <guid>https://renem2185.github.io/tags/brainfck/</guid>
+      <description></description>
+      <content></content>
+    </item>
+    
+    <item>
+      <title>C</title>
+      <link>https://renem2185.github.io/tags/c/</link>
+      <pubDate>Sat, 16 Mar 2024 16:53:28 +0900</pubDate>
+      
+      <guid>https://renem2185.github.io/tags/c/</guid>
+      <description></description>
+      <content></content>
+    </item>
+    
+    <item>
+      <title>linux</title>
+      <link>https://renem2185.github.io/tags/linux/</link>
+      <pubDate>Sat, 16 Mar 2024 16:53:28 +0900</pubDate>
+      
+      <guid>https://renem2185.github.io/tags/linux/</guid>
+      <description></description>
+      <content></content>
+    </item>
+    
+    <item>
+      <title>scheme</title>
+      <link>https://renem2185.github.io/tags/scheme/</link>
+      <pubDate>Sat, 16 Mar 2024 16:53:28 +0900</pubDate>
+      
+      <guid>https://renem2185.github.io/tags/scheme/</guid>
+      <description></description>
+      <content></content>
+    </item>
+    
+    <item>
+      <title>WebAssembly</title>
+      <link>https://renem2185.github.io/tags/webassembly/</link>
+      <pubDate>Sat, 16 Mar 2024 16:53:28 +0900</pubDate>
+      
+      <guid>https://renem2185.github.io/tags/webassembly/</guid>
+      <description></description>
+      <content></content>
+    </item>
+    
     <item>
       <title>game</title>
       <link>https://renem2185.github.io/tags/game/</link>
@@ -24,16 +74,6 @@
       <pubDate>Thu, 07 Sep 2023 21:03:48 +0900</pubDate>
       
       <guid>https://renem2185.github.io/tags/activitypub/</guid>
-      <description></description>
-      <content></content>
-    </item>
-    
-    <item>
-      <title>linux</title>
-      <link>https://renem2185.github.io/tags/linux/</link>
-      <pubDate>Thu, 07 Sep 2023 21:03:48 +0900</pubDate>
-      
-      <guid>https://renem2185.github.io/tags/linux/</guid>
       <description></description>
       <content></content>
     </item>

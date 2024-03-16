@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+    <title>Lisp (Scheme) に入門していたつもりが、いつの間にか WebAssemblyをかじっていた件 :: Murakumo-san is distributed now</title>
+  
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="何を言っているかわからねーと思うが (ry TL; DR できたものは こちら Brainf*ck インタプリタですね 書いたコードが動くとたのしい 🫠 今回いつも以上に乱文になりそう、" />
+<meta name="keywords" content=", " />
+
+  <meta name="robots" content="noodp" />
+
+<link rel="canonical" href="https://renem2185.github.io/posts/chicken2wasm/" />
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="https://renem2185.github.io/styles.css">
+
+
+
+<link rel="stylesheet" href="https://renem2185.github.io/style.css">
+
+
+
+  <link rel="shortcut icon" href="https://renem2185.github.io/img/theme-colors/orange.png">
+  <link rel="apple-touch-icon" href="https://renem2185.github.io/img/theme-colors/orange.png">
+
+
+
+<meta name="twitter:card" content="summary" />
+
+  
+    <meta name="twitter:site" content="rene_murakumo" />
+  
+    <meta name="twitter:creator" content="" />
+
+
+
+<meta property="og:locale" content="en" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="Lisp (Scheme) に入門していたつもりが、いつの間にか WebAssemblyをかじっていた件">
+<meta property="og:description" content="何を言っているかわからねーと思うが (ry TL; DR できたものは こちら Brainf*ck インタプリタですね 書いたコードが動くとたのしい 🫠 今回いつも以上に乱文になりそう、" />
+<meta property="og:url" content="https://renem2185.github.io/posts/chicken2wasm/" />
+<meta property="og:site_name" content="Murakumo-san is distributed now" />
+
+  
+  
+  <meta property="og:image" content="https://renem2185.github.io/">
+
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="627">
+
+
+  <meta property="article:published_time" content="2024-03-16 16:53:28 &#43;0900 JST" />
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+<body class="orange">
+
+
+<div class="container headings--one-size">
+
+  <header class="header">
+  <div class="header__inner">
+    <div class="header__logo">
+      <a href="/">
+  <div class="logo">
+    Murakumo-san is distributed now
+  </div>
+</a>
+
+    </div>
+    
+      <ul class="menu menu--mobile">
+  <li class="menu__trigger">Menu&nbsp;▾</li>
+  <li>
+    <ul class="menu__dropdown">
+      
+        
+          <li><a href="/posts/about">About</a></li>
+        
+      
+        
+          <li><a href="/posts/links">Links</a></li>
+        
+      
+      
+    </ul>
+  </li>
+</ul>
+
+    
+    
+  </div>
+  
+    <nav class="navigation-menu">
+  <ul class="navigation-menu__inner menu--desktop">
+    
+      
+        
+          <li><a href="/posts/about" >About</a></li>
+        
+      
+        
+          <li><a href="/posts/links" >Links</a></li>
+        
+      
+      
+    
+  </ul>
+</nav>
+
+  
+</header>
+
+
+  <div class="content">
+    
+<article class="post">
+  <h1 class="post-title">
+    <a href="https://renem2185.github.io/posts/chicken2wasm/">Lisp (Scheme) に入門していたつもりが、いつの間にか WebAssemblyをかじっていた件</a>
+  </h1>
+  <div class="post-meta">
+    
+      <time class="post-date">
+        2024-03-16 ::
+        
+      </time>
+    
+    
+    
+  </div>
+
+  
+    <span class="post-tags">
+      
+      #<a href="https://renem2185.github.io/tags/linux/">linux</a>&nbsp;
+      
+      #<a href="https://renem2185.github.io/tags/scheme/">scheme</a>&nbsp;
+      
+      #<a href="https://renem2185.github.io/tags/c/">C</a>&nbsp;
+      
+      #<a href="https://renem2185.github.io/tags/brainfck/">brainf*ck</a>&nbsp;
+      
+      #<a href="https://renem2185.github.io/tags/webassembly/">WebAssembly</a>&nbsp;
+      
+    </span>
+  
+  
+
+
+  
+
+  <div class="post-content"><div>
+        <p>何を言っているかわからねーと思うが (ry</p>
+
+  <img src="https://mi.tsujigoya.net/files/0c6702e2-0117-4256-a3f0-06febc6ef21a"  alt="ブラウザでなにかが動いてる様子"  class="left"  />
+
+
+<h2 id="tl-dr">TL; DR<a href="#tl-dr" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<blockquote>
+<ul>
+<li>できたものは <a href="https://renem2185.github.io/bf/vectorbfi.html">こちら</a>
+<ul>
+<li><a href="https://ja.wikipedia.org/wiki/Brainfuck">Brainf*ck</a> インタプリタですね</li>
+<li>書いたコードが動くとたのしい 🫠</li>
+<li>今回いつも以上に乱文になりそう、ゆるして</li>
+</ul>
+</li>
+<li><strong>最近の話が上手く飲み込めないときは過去の文脈を遡ろう</strong>
+<ul>
+<li>Dockerが分からないなら Chrootから学べばいいじゃない</li>
+</ul>
+</li>
+</ul>
+</blockquote>
+<h2 id="モチベと背景">モチベと背景<a href="#モチベと背景" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<p>元はと言えば関数型プログラミングってなんぞや？ ってなってたんですよね。</p>
+<p>もっと言うと、流行りのプログラミング言語はよく
+<a href="https://ja.wikipedia.org/wiki/%E3%83%9E%E3%83%AB%E3%83%81%E3%83%91%E3%83%A9%E3%83%80%E3%82%A4%E3%83%A0%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%9F%E3%83%B3%E3%82%B0%E8%A8%80%E8%AA%9E">「マルチパラダイム」</a>
+だと言われていて、特に関数型プログラミングの機能を部分的に取り入れていて～
+って話題になりがちなのですが (要出典)、それ以前の元々の関数型言語ってどんな姿で、
+それらはどんなアイデアをもとに書かれていたのだろう？ みたいな。</p>
+<h4 id="プログラミング言語-lisphttpsjawikipediaorgwikilisp">プログラミング言語 <a href="https://ja.wikipedia.org/wiki/LISP">Lisp</a><a href="#プログラミング言語-lisphttpsjawikipediaorgwikilisp" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h4>
+<p><del>え？ Haskell? <a href="https://www.ohmsha.co.jp/book/9784274068850/">すごいH本</a>もいま読んでますんで……</del></p>
+<p>文 (statement) を使わずとも式 (Expression)
+さえあればプログラミングはできてしまうらしい。ただしCとはちょっと違う姿に。
+後述。</p>
+<p>数ある Lisp方言の中でも <a href="https://ja.wikipedia.org/wiki/Scheme">Scheme</a>
+は変数スコープが工夫されているそうで。</p>
+<p>あと、データ型が緩くて可変長の配列とか構造とかを好き放題いじくれるのやべえなって。</p>
+<h4 id="chicken-schemehttpswwwcall-ccorg"><a href="https://www.call-cc.org/">Chicken Scheme</a><a href="#chicken-schemehttpswwwcall-ccorg" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h4>
+<p>Scheme → C言語 トランスパイラ兼コンパイラ。</p>
+<p>先に述べた不思議な言語をCと組み合わせられると聞いて手を出した次第。</p>
+<h4 id="brainfck">Brainf*ck<a href="#brainfck" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h4>
+<p>プログラミング言語。読めない。
+でも機能が少ない分コンパイラが比較的簡単に書けるらしい。
+今回はインタプリタにしたけれど。</p>
+<p>Lispはプログラミング言語 (のコンパイラとか実行環境)
+の開発にも適すると風の噂で……</p>
+<p><del>中々自分で書けなくてひとのコードでデバッグせざるを得なかった</del></p>
+<h4 id="emscriptenhttpsemscriptenorg"><a href="https://emscripten.org/">Emscripten</a><a href="#emscriptenhttpsemscriptenorg" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h4>
+<p>C/C++コードを WebAssembly実行ファイルにコンパイルし、
+さらにそれをブラウザで読み込ませるJSのコードまで生成してくれるSDK、なのかな？
+後述。</p>
+<hr>
+<h2 id="やっていて感じたこと">やっていて感じたこと<a href="#やっていて感じたこと" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<h4 id="関数型プログラミング">関数型プログラミング……？<a href="#関数型プログラミング" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-scheme" data-lang="scheme"><span style="display:flex;"><span><span style="color:#75715e">; 8bit符号なし整数の範囲からちょっとズレた値を調整する</span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">define </span>overflow
+</span></span><span style="display:flex;"><span>  (<span style="color:#66d9ef">lambda </span>(<span style="color:#a6e22e">x</span>)
+</span></span><span style="display:flex;"><span>    (<span style="color:#66d9ef">cond </span>((&lt; <span style="color:#ae81ff">255</span> x) <span style="color:#ae81ff">0</span>)
+</span></span><span style="display:flex;"><span>          ((&lt; x <span style="color:#ae81ff">0</span>) <span style="color:#ae81ff">255</span>)
+</span></span><span style="display:flex;"><span>          (<span style="color:#66d9ef">else </span>x))))
+</span></span></code></pre></div><p>if文の()内によく <code>x &lt; 0</code>とかって書いたりしますが、
+Lispでは<code>&lt;</code>とか<code>+</code>も前置する関数、
+ここでは手続き (procedure) と呼ばれるものになるんですね (注1)。</p>
+<p>それと <code>cond</code>は &ldquo;condition&quot;の略で、switch文みたいな分岐をしてくれる子です。
+ただしこれも引数がいっぱいある「手続き」になっていて、
+マッチした条件式のあとの式が評価されて返されます。</p>
+<p>また、一度束縛した変数は基本的に不変 (immutable) で、
+必要に応じて <code>set!</code>のような <code>!</code>マークの付いた手続きで上書きも一応は可能、
+くらいのスタンスらしいです (注2)。</p>
+<p>というのもループなどを含めそもそも破壊的変更が必要なシーンが無いんですね
+(それこそパフォーマンスの都合でメモリを上書きしたい、とかそんくらいかもしれない)。
+例えば再帰呼び出しする関数も、
+その関数単体は引数が同じなら同じものが返るやつ、みたいなイメージ？</p>
+<p>他にも、<a href="https://ja.wikipedia.org/wiki/%E9%81%85%E5%BB%B6%E8%A9%95%E4%BE%A1">遅延評価</a>
+や<a href="https://ja.wikipedia.org/wiki/%E7%B6%99%E7%B6%9A%E6%B8%A1%E3%81%97%E3%82%B9%E3%82%BF%E3%82%A4%E3%83%AB">継続渡しスタイル</a>
+といったコンセプトが有名らしいです。
+前者はちょっとだけ今回も使っています。</p>
+<p>言うまでもない話ではあるのですが、これらもいわゆる「銀の弾丸」ではなく、
+ロジックがミスっていれば普通にコケます。上記のコードも、一度に <code>±1</code>
+より大きく増減した数値に対しては思ったように動かないはずです。</p>
+<h4 id="リスト操作は計算コストが大きめ">リスト操作は計算コストが大きめ<a href="#リスト操作は計算コストが大きめ" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h4>
+<ul>
+<li>再帰的に参照してるのだからそりゃあそう</li>
+<li>Brainf*ckインタプリタのメモリの実装をベクタに変えたら倍速くらいに
+<ul>
+<li>これはこれで多分ですが頻繫にヒープメモリを触っていて、
+C言語の固定長配列よろしくスタックにものを置く実装より重いのでは
+<ul>
+<li>もちろん柔軟で便利ではある</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="別の話-特殊なことをしようとするとビルドがちょっと大変かも">別の話: 特殊なことをしようとするとビルドがちょっと大変かも<a href="#別の話-特殊なことをしようとするとビルドがちょっと大変かも" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h4>
+<p>最初は手元で Schemeのコードを動かしてｷｬｯｷｬしてたんですけれども、
+WebAssemblyにしたらインストール不要な形で公開できんじゃね？
+と思い立ちあれこれ試していたら丸一日以上溶けました。</p>
+<p><a href="http://wiki.call-cc.org/man/5/Deployment#distributing-compiled-c-files">参考: SchemeのコードをCのプロジェクトとして扱うチュートリアル</a></p>
+<p>Schemeのソースファイルを Cのソースファイルに変換するまではいいけれど、
+それを Clangでコンパイルさせるには……？？ と
+(まぁモジュールのソースコード読めばいいのですけれど、
+最終的に今回は依存関係の解決を手動でやっちゃっていたという)。</p>
+<p>Chickenで Emscriptenをやっているひとが中々見つけられず、
+唯一見つけた例もモジュールがほぼ不要な
+Hello Worldコードだったのでその先は試行錯誤しました。</p>
+<pre tabindex="0"><code>/bin/ld: /tmp/vectorbfi-b5a9f6.o: in function `f_332&#39;:
+vectorbfi.c:(.text+0x926): undefined reference to `C_srfi_2d4_toplevel&#39;
+</code></pre><p>例えばこのエラーは <code>srfi-4</code>
+というモジュールが不足している、という意味なのですが、
+シンボルの名前が保持されていたりいなかったりで最初面食らっちゃいました。</p>
+<p>最終的な手順はこちら:
+<a href="https://gist.github.com/renem2185/eb907c6b0f554f95de929420d7d20a77">https://gist.github.com/renem2185/eb907c6b0f554f95de929420d7d20a77</a></p>
+<p>ビルドとグルーコードの作成さえできちゃえば、
+もう今回のように Hugoと GitHub Pagesでデプロイできちゃいますよと。最高ですね。</p>
+<p>……多分、単に WebAssemblyをやりたいだけだったら Rustとか C++とか、
+他に幾らでも選択肢はあるしその方が最適化できるんじゃないかな？</p>
+<hr>
+<h2 id="雑感">雑感<a href="#雑感" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<ul>
+<li>たのしい (小並感)
+<ul>
+<li>関数型プログラミングの心がちょっとだけわかった気がします</li>
+<li>いくらか心身の快復を感じました、療養中なんでこんなもんでしょう</li>
+<li>てか正直これ動くと思ってなかったので……</li>
+<li>レガシーっぽい技術も深掘りすると面白い、かも</li>
+</ul>
+</li>
+</ul>
+<h2 id="残件">残件<a href="#残件" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<h4 id="chickenのクロスコンパイル機能を試す">Chickenのクロスコンパイル機能を試す<a href="#chickenのクロスコンパイル機能を試す" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h4>
+<ul>
+<li>Chicken側でも Clangのオプションが使えるらしい
+<ul>
+<li>つまり Scheme → LLVM IR → WASM みたいな手順で楽にコンパイルできるのでは</li>
+<li>Emscriptenに頼らない方が楽という説も</li>
+<li>ついでに WebAssemblyインスタンスのメモリが不足する？ 問題も調べたい</li>
+</ul>
+</li>
+</ul>
+<h4 id="chickenのffiを試す">ChickenのFFIを試す<a href="#chickenのffiを試す" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h4>
+<ul>
+<li>Scheme視点からCのコードを includeする例は公式サイトにあった</li>
+<li>なんとかして Schemeの関数をWASM側に公開できないかな～？</li>
+</ul>
+<h4 id="brainfckコンパイラは書かないの">Brainf*ckコンパイラは書かないの？<a href="#brainfckコンパイラは書かないの" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h4>
+<ul>
+<li>気が向いたら</li>
+</ul>
+<h4 id="ここまで来たら他のプログラミング言語も習得できるはず">ここまで来たら他のプログラミング言語も習得できるはず！<a href="#ここまで来たら他のプログラミング言語も習得できるはず" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h4>
+<ul>
+<li>そもそも Rustとかの予習を意図していた
+<ul>
+<li>あとは C++のスマートポインタとかかな</li>
+</ul>
+</li>
+</ul>
+<h2 id="脚注">脚注<a href="#脚注" class="hanchor" ariaLabel="Anchor">&#8983;</a> </h2>
+<ol>
+<li>ここでいう手続き (procedure) はSQLのそれとは別物。大抵何かしら返ってくる。</li>
+<li>実装によるみたい？ <a href="https://practical-scheme.net/wiliki/wiliki.cgi?Gauche%3Aimmutable%E3%81%AA%E3%83%87%E3%83%BC%E3%82%BF%E3%81%AE%E6%B3%A8%E6%84%8F%E7%82%B9">参考: Gauche:immutableなデータの注意点</a></li>
+</ol>
+
+      </div></div>
+
+  
+    
+<div class="pagination">
+    <div class="pagination__title">
+        <span class="pagination__title-h">Read other posts</span>
+        <hr />
+    </div>
+    <div class="pagination__buttons">
+        
+        
+        <span class="button next">
+            <a href="https://renem2185.github.io/posts/played_games_2023/">
+                <span class="button__text">ゲーム遍歴 (2023年まで)</span>
+                <span class="button__icon">→</span>
+            </a>
+        </span>
+        
+    </div>
+</div>
+
+  
+
+  
+    
+
+  
+</article>
+
+  </div>
+
+  
+    <footer class="footer">
+  <div class="footer__inner">
+    
+      <div class="copyright copyright--user">
+        <span>Rene Murakumo</span>
+    
+      <span>:: <a href="https://github.com/panr/hugo-theme-terminal" target="_blank">Theme</a> made by <a href="https://github.com/panr" target="_blank">panr</a></span>
+      </div>
+  </div>
+</footer>
+
+
+
+
+
+
+<script type="text/javascript" src="/bundle.min.js"></script>
+
+
+
+
+
+  
+</div>
+
+</body>
+</html>

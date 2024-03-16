@@ -7,7 +7,179 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Rene Murakumo</copyright>
-    <lastBuildDate>Sun, 14 Jan 2024 19:19:10 +0900</lastBuildDate><atom:link href="https://renem2185.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 16 Mar 2024 16:53:28 +0900</lastBuildDate><atom:link href="https://renem2185.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Lisp (Scheme) に入門していたつもりが、いつの間にか WebAssemblyをかじっていた件</title>
+      <link>https://renem2185.github.io/posts/chicken2wasm/</link>
+      <pubDate>Sat, 16 Mar 2024 16:53:28 +0900</pubDate>
+      
+      <guid>https://renem2185.github.io/posts/chicken2wasm/</guid>
+      <description>何を言っているかわからねーと思うが (ry TL; DR できたものは こちら Brainf*ck インタプリタですね 書いたコードが動くとたのしい 🫠 今回いつも以上に乱文になりそう、</description>
+      <content>&lt;p&gt;何を言っているかわからねーと思うが (ry&lt;/p&gt;
+
+  &lt;img src=&#34;https://mi.tsujigoya.net/files/0c6702e2-0117-4256-a3f0-06febc6ef21a&#34;  alt=&#34;ブラウザでなにかが動いてる様子&#34;  class=&#34;left&#34;  /&gt;
+
+
+&lt;h2 id=&#34;tl-dr&#34;&gt;TL; DR&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;できたものは &lt;a href=&#34;https://renem2185.github.io/bf/vectorbfi.html&#34;&gt;こちら&lt;/a&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://ja.wikipedia.org/wiki/Brainfuck&#34;&gt;Brainf*ck&lt;/a&gt; インタプリタですね&lt;/li&gt;
+&lt;li&gt;書いたコードが動くとたのしい 🫠&lt;/li&gt;
+&lt;li&gt;今回いつも以上に乱文になりそう、ゆるして&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;最近の話が上手く飲み込めないときは過去の文脈を遡ろう&lt;/strong&gt;
+&lt;ul&gt;
+&lt;li&gt;Dockerが分からないなら Chrootから学べばいいじゃない&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&#34;モチベと背景&#34;&gt;モチベと背景&lt;/h2&gt;
+&lt;p&gt;元はと言えば関数型プログラミングってなんぞや？ ってなってたんですよね。&lt;/p&gt;
+&lt;p&gt;もっと言うと、流行りのプログラミング言語はよく
+&lt;a href=&#34;https://ja.wikipedia.org/wiki/%E3%83%9E%E3%83%AB%E3%83%81%E3%83%91%E3%83%A9%E3%83%80%E3%82%A4%E3%83%A0%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%9F%E3%83%B3%E3%82%B0%E8%A8%80%E8%AA%9E&#34;&gt;「マルチパラダイム」&lt;/a&gt;
+だと言われていて、特に関数型プログラミングの機能を部分的に取り入れていて～
+って話題になりがちなのですが (要出典)、それ以前の元々の関数型言語ってどんな姿で、
+それらはどんなアイデアをもとに書かれていたのだろう？ みたいな。&lt;/p&gt;
+&lt;h4 id=&#34;プログラミング言語-lisphttpsjawikipediaorgwikilisp&#34;&gt;プログラミング言語 &lt;a href=&#34;https://ja.wikipedia.org/wiki/LISP&#34;&gt;Lisp&lt;/a&gt;&lt;/h4&gt;
+&lt;p&gt;&lt;del&gt;え？ Haskell? &lt;a href=&#34;https://www.ohmsha.co.jp/book/9784274068850/&#34;&gt;すごいH本&lt;/a&gt;もいま読んでますんで……&lt;/del&gt;&lt;/p&gt;
+&lt;p&gt;文 (statement) を使わずとも式 (Expression)
+さえあればプログラミングはできてしまうらしい。ただしCとはちょっと違う姿に。
+後述。&lt;/p&gt;
+&lt;p&gt;数ある Lisp方言の中でも &lt;a href=&#34;https://ja.wikipedia.org/wiki/Scheme&#34;&gt;Scheme&lt;/a&gt;
+は変数スコープが工夫されているそうで。&lt;/p&gt;
+&lt;p&gt;あと、データ型が緩くて可変長の配列とか構造とかを好き放題いじくれるのやべえなって。&lt;/p&gt;
+&lt;h4 id=&#34;chicken-schemehttpswwwcall-ccorg&#34;&gt;&lt;a href=&#34;https://www.call-cc.org/&#34;&gt;Chicken Scheme&lt;/a&gt;&lt;/h4&gt;
+&lt;p&gt;Scheme → C言語 トランスパイラ兼コンパイラ。&lt;/p&gt;
+&lt;p&gt;先に述べた不思議な言語をCと組み合わせられると聞いて手を出した次第。&lt;/p&gt;
+&lt;h4 id=&#34;brainfck&#34;&gt;Brainf*ck&lt;/h4&gt;
+&lt;p&gt;プログラミング言語。読めない。
+でも機能が少ない分コンパイラが比較的簡単に書けるらしい。
+今回はインタプリタにしたけれど。&lt;/p&gt;
+&lt;p&gt;Lispはプログラミング言語 (のコンパイラとか実行環境)
+の開発にも適すると風の噂で……&lt;/p&gt;
+&lt;p&gt;&lt;del&gt;中々自分で書けなくてひとのコードでデバッグせざるを得なかった&lt;/del&gt;&lt;/p&gt;
+&lt;h4 id=&#34;emscriptenhttpsemscriptenorg&#34;&gt;&lt;a href=&#34;https://emscripten.org/&#34;&gt;Emscripten&lt;/a&gt;&lt;/h4&gt;
+&lt;p&gt;C/C++コードを WebAssembly実行ファイルにコンパイルし、
+さらにそれをブラウザで読み込ませるJSのコードまで生成してくれるSDK、なのかな？
+後述。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;やっていて感じたこと&#34;&gt;やっていて感じたこと&lt;/h2&gt;
+&lt;h4 id=&#34;関数型プログラミング&#34;&gt;関数型プログラミング……？&lt;/h4&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-scheme&#34; data-lang=&#34;scheme&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;; 8bit符号なし整数の範囲からちょっとズレた値を調整する&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;define &lt;/span&gt;overflow
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;  (&lt;span style=&#34;color:#66d9ef&#34;&gt;lambda &lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;x&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;    (&lt;span style=&#34;color:#66d9ef&#34;&gt;cond &lt;/span&gt;((&amp;lt; &lt;span style=&#34;color:#ae81ff&#34;&gt;255&lt;/span&gt; x) &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;          ((&amp;lt; x &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;) &lt;span style=&#34;color:#ae81ff&#34;&gt;255&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;          (&lt;span style=&#34;color:#66d9ef&#34;&gt;else &lt;/span&gt;x))))
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;if文の()内によく &lt;code&gt;x &amp;lt; 0&lt;/code&gt;とかって書いたりしますが、
+Lispでは&lt;code&gt;&amp;lt;&lt;/code&gt;とか&lt;code&gt;+&lt;/code&gt;も前置する関数、
+ここでは手続き (procedure) と呼ばれるものになるんですね (注1)。&lt;/p&gt;
+&lt;p&gt;それと &lt;code&gt;cond&lt;/code&gt;は &amp;ldquo;condition&amp;quot;の略で、switch文みたいな分岐をしてくれる子です。
+ただしこれも引数がいっぱいある「手続き」になっていて、
+マッチした条件式のあとの式が評価されて返されます。&lt;/p&gt;
+&lt;p&gt;また、一度束縛した変数は基本的に不変 (immutable) で、
+必要に応じて &lt;code&gt;set!&lt;/code&gt;のような &lt;code&gt;!&lt;/code&gt;マークの付いた手続きで上書きも一応は可能、
+くらいのスタンスらしいです (注2)。&lt;/p&gt;
+&lt;p&gt;というのもループなどを含めそもそも破壊的変更が必要なシーンが無いんですね
+(それこそパフォーマンスの都合でメモリを上書きしたい、とかそんくらいかもしれない)。
+例えば再帰呼び出しする関数も、
+その関数単体は引数が同じなら同じものが返るやつ、みたいなイメージ？&lt;/p&gt;
+&lt;p&gt;他にも、&lt;a href=&#34;https://ja.wikipedia.org/wiki/%E9%81%85%E5%BB%B6%E8%A9%95%E4%BE%A1&#34;&gt;遅延評価&lt;/a&gt;
+や&lt;a href=&#34;https://ja.wikipedia.org/wiki/%E7%B6%99%E7%B6%9A%E6%B8%A1%E3%81%97%E3%82%B9%E3%82%BF%E3%82%A4%E3%83%AB&#34;&gt;継続渡しスタイル&lt;/a&gt;
+といったコンセプトが有名らしいです。
+前者はちょっとだけ今回も使っています。&lt;/p&gt;
+&lt;p&gt;言うまでもない話ではあるのですが、これらもいわゆる「銀の弾丸」ではなく、
+ロジックがミスっていれば普通にコケます。上記のコードも、一度に &lt;code&gt;±1&lt;/code&gt;
+より大きく増減した数値に対しては思ったように動かないはずです。&lt;/p&gt;
+&lt;h4 id=&#34;リスト操作は計算コストが大きめ&#34;&gt;リスト操作は計算コストが大きめ&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;再帰的に参照してるのだからそりゃあそう&lt;/li&gt;
+&lt;li&gt;Brainf*ckインタプリタのメモリの実装をベクタに変えたら倍速くらいに
+&lt;ul&gt;
+&lt;li&gt;これはこれで多分ですが頻繫にヒープメモリを触っていて、
+C言語の固定長配列よろしくスタックにものを置く実装より重いのでは
+&lt;ul&gt;
+&lt;li&gt;もちろん柔軟で便利ではある&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;別の話-特殊なことをしようとするとビルドがちょっと大変かも&#34;&gt;別の話: 特殊なことをしようとするとビルドがちょっと大変かも&lt;/h4&gt;
+&lt;p&gt;最初は手元で Schemeのコードを動かしてｷｬｯｷｬしてたんですけれども、
+WebAssemblyにしたらインストール不要な形で公開できんじゃね？
+と思い立ちあれこれ試していたら丸一日以上溶けました。&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;http://wiki.call-cc.org/man/5/Deployment#distributing-compiled-c-files&#34;&gt;参考: SchemeのコードをCのプロジェクトとして扱うチュートリアル&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Schemeのソースファイルを Cのソースファイルに変換するまではいいけれど、
+それを Clangでコンパイルさせるには……？？ と
+(まぁモジュールのソースコード読めばいいのですけれど、
+最終的に今回は依存関係の解決を手動でやっちゃっていたという)。&lt;/p&gt;
+&lt;p&gt;Chickenで Emscriptenをやっているひとが中々見つけられず、
+唯一見つけた例もモジュールがほぼ不要な
+Hello Worldコードだったのでその先は試行錯誤しました。&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;/bin/ld: /tmp/vectorbfi-b5a9f6.o: in function `f_332&amp;#39;:
+vectorbfi.c:(.text+0x926): undefined reference to `C_srfi_2d4_toplevel&amp;#39;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;例えばこのエラーは &lt;code&gt;srfi-4&lt;/code&gt;
+というモジュールが不足している、という意味なのですが、
+シンボルの名前が保持されていたりいなかったりで最初面食らっちゃいました。&lt;/p&gt;
+&lt;p&gt;最終的な手順はこちら:
+&lt;a href=&#34;https://gist.github.com/renem2185/eb907c6b0f554f95de929420d7d20a77&#34;&gt;https://gist.github.com/renem2185/eb907c6b0f554f95de929420d7d20a77&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;ビルドとグルーコードの作成さえできちゃえば、
+もう今回のように Hugoと GitHub Pagesでデプロイできちゃいますよと。最高ですね。&lt;/p&gt;
+&lt;p&gt;……多分、単に WebAssemblyをやりたいだけだったら Rustとか C++とか、
+他に幾らでも選択肢はあるしその方が最適化できるんじゃないかな？&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;雑感&#34;&gt;雑感&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;たのしい (小並感)
+&lt;ul&gt;
+&lt;li&gt;関数型プログラミングの心がちょっとだけわかった気がします&lt;/li&gt;
+&lt;li&gt;いくらか心身の快復を感じました、療養中なんでこんなもんでしょう&lt;/li&gt;
+&lt;li&gt;てか正直これ動くと思ってなかったので……&lt;/li&gt;
+&lt;li&gt;レガシーっぽい技術も深掘りすると面白い、かも&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;残件&#34;&gt;残件&lt;/h2&gt;
+&lt;h4 id=&#34;chickenのクロスコンパイル機能を試す&#34;&gt;Chickenのクロスコンパイル機能を試す&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;Chicken側でも Clangのオプションが使えるらしい
+&lt;ul&gt;
+&lt;li&gt;つまり Scheme → LLVM IR → WASM みたいな手順で楽にコンパイルできるのでは&lt;/li&gt;
+&lt;li&gt;Emscriptenに頼らない方が楽という説も&lt;/li&gt;
+&lt;li&gt;ついでに WebAssemblyインスタンスのメモリが不足する？ 問題も調べたい&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;chickenのffiを試す&#34;&gt;ChickenのFFIを試す&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;Scheme視点からCのコードを includeする例は公式サイトにあった&lt;/li&gt;
+&lt;li&gt;なんとかして Schemeの関数をWASM側に公開できないかな～？&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;brainfckコンパイラは書かないの&#34;&gt;Brainf*ckコンパイラは書かないの？&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;気が向いたら&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;ここまで来たら他のプログラミング言語も習得できるはず&#34;&gt;ここまで来たら他のプログラミング言語も習得できるはず！&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;そもそも Rustとかの予習を意図していた
+&lt;ul&gt;
+&lt;li&gt;あとは C++のスマートポインタとかかな&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;脚注&#34;&gt;脚注&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;ここでいう手続き (procedure) はSQLのそれとは別物。大抵何かしら返ってくる。&lt;/li&gt;
+&lt;li&gt;実装によるみたい？ &lt;a href=&#34;https://practical-scheme.net/wiliki/wiliki.cgi?Gauche%3Aimmutable%E3%81%AA%E3%83%87%E3%83%BC%E3%82%BF%E3%81%AE%E6%B3%A8%E6%84%8F%E7%82%B9&#34;&gt;参考: Gauche:immutableなデータの注意点&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+</content>
+    </item>
+    
     <item>
       <title>ゲーム遍歴 (2023年まで)</title>
       <link>https://renem2185.github.io/posts/played_games_2023/</link>

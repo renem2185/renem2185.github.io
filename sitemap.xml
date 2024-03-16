@@ -2,25 +2,40 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://renem2185.github.io/tags/game/</loc>
-    <lastmod>2024-01-14T19:19:10+09:00</lastmod>
+    <loc>https://renem2185.github.io/tags/brainfck/</loc>
+    <lastmod>2024-03-16T16:53:28+09:00</lastmod>
+  </url><url>
+    <loc>https://renem2185.github.io/tags/c/</loc>
+    <lastmod>2024-03-16T16:53:28+09:00</lastmod>
+  </url><url>
+    <loc>https://renem2185.github.io/tags/linux/</loc>
+    <lastmod>2024-03-16T16:53:28+09:00</lastmod>
+  </url><url>
+    <loc>https://renem2185.github.io/posts/chicken2wasm/</loc>
+    <lastmod>2024-03-16T16:53:28+09:00</lastmod>
   </url><url>
     <loc>https://renem2185.github.io/</loc>
-    <lastmod>2024-01-14T19:19:10+09:00</lastmod>
+    <lastmod>2024-03-16T16:53:28+09:00</lastmod>
   </url><url>
     <loc>https://renem2185.github.io/posts/</loc>
-    <lastmod>2024-01-14T19:19:10+09:00</lastmod>
+    <lastmod>2024-03-16T16:53:28+09:00</lastmod>
+  </url><url>
+    <loc>https://renem2185.github.io/tags/scheme/</loc>
+    <lastmod>2024-03-16T16:53:28+09:00</lastmod>
   </url><url>
     <loc>https://renem2185.github.io/tags/</loc>
+    <lastmod>2024-03-16T16:53:28+09:00</lastmod>
+  </url><url>
+    <loc>https://renem2185.github.io/tags/webassembly/</loc>
+    <lastmod>2024-03-16T16:53:28+09:00</lastmod>
+  </url><url>
+    <loc>https://renem2185.github.io/tags/game/</loc>
     <lastmod>2024-01-14T19:19:10+09:00</lastmod>
   </url><url>
     <loc>https://renem2185.github.io/posts/played_games_2023/</loc>
     <lastmod>2024-01-14T19:19:10+09:00</lastmod>
   </url><url>
     <loc>https://renem2185.github.io/tags/activitypub/</loc>
-    <lastmod>2023-09-07T21:03:48+09:00</lastmod>
-  </url><url>
-    <loc>https://renem2185.github.io/tags/linux/</loc>
     <lastmod>2023-09-07T21:03:48+09:00</lastmod>
   </url><url>
     <loc>https://renem2185.github.io/tags/misskey/</loc>
