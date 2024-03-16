@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8"/>
+    <title>My Brainf*ck interpreter</title>
+  </head>
+  <body>
+    <h2>My Brainf*ck interpreter written in Scheme</h2>
+    <p>
+      <a href='https://github.com/renem2185/my-bf'>
+        https://github.com/renem2185/my-bf
+      </a>
+      を WebAssembly向けにコンパイルしてみました
+    </p>
+    <p>
+      <textarea id='input' rows='8' cols='80'
+        placeholder='Brainf*** code here!'>
+      </textarea>
+      <button id='launch'> 実行！</button>
+    </p>
+    <p> ↓ </p>
+    <p> 結果:
+      <code id='output'></code>
+    </p>
+    <p> デバッグ出力: </p>
+    <p><code id='stderr'></code></p>
+    <hr />
+    <p>
+      ","を使うと入力ダイアログが表示されます、
+      これ以上入力するものが無いときは「キャンセル」を押してください
+    </p>
+    <p> コード例: </p>
+    <pre><code>
+## Hello world
++++++++++[-&gt;++++++++&gt;+++++++++++&gt;+++++&lt;&lt;&lt;]&gt;.&gt;++.+++++++..+++.&gt;-.
+------------.&lt;++++++++.--------.+++.------.--------.&gt;+.
+    </code></pre>
+    <pre><code>
+## FizzBuzz
+++++++[-&gt;++++&gt;&gt;+&gt;+&gt;-&lt;&lt;&lt;&lt;&lt;]&gt;[&lt;++++&gt;&gt;+++&gt;++++&gt;&gt;+++&gt;+++++&gt;+++++&gt;&gt;&gt;&gt;&gt;&gt;++&gt;&gt;++&lt;
+&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;-]&lt;++++&gt;+++&gt;--&gt;+++&gt;-&gt;&gt;---&gt;++&gt;&gt;&gt;+++++[-&gt;++&gt;++&lt;&lt;]&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;[-&gt;
+-[&gt;&gt;&gt;&gt;&gt;&gt;&gt;]&gt;[&lt;+++&gt;.&gt;.&gt;&gt;&gt;&gt;..&gt;&gt;&gt;+&lt;]&lt;&lt;&lt;&lt;&lt;-[&gt;&gt;&gt;&gt;]&gt;[&lt;+++++&gt;.&gt;.&gt;..&gt;&gt;&gt;+&lt;]&gt;&gt;&gt;&gt;+&lt;-[
+&lt;&lt;&lt;]&lt;[[-&lt;&lt;+&gt;&gt;]&gt;&gt;&gt;+&gt;+&lt;&lt;&lt;&lt;&lt;&lt;[-&gt;&gt;+&gt;+&gt;-&lt;&lt;&lt;&lt;]&lt;]&gt;&gt;[[-]&lt;]&gt;[&gt;&gt;&gt;[&gt;.&lt;&lt;.&lt;&lt;&lt;]&lt;[.&lt;&lt;&lt;&lt;]
+&gt;]&gt;.&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;]
+    </code></pre>
+    <p> 既知の不具合: Quineを実行しようとするとOOMエラーで落ちる？ </p>
+    <script src="vectorbfi.js"></script>
+    <script>
+
+document.getElementById('launch').addEventListener('click', () => {
+  document.getElementById('output').textContent = "";
+  document.getElementById('stderr').textContent = ""; // reset them
+  fetch('vectorbfi.wasm')
+    .then(response => response.arrayBuffer())
+    .then(buffer => new Uint8Array(buffer))
+    .then(binary => {
+      var moduleArgs = {
+        wasmBinary: binary,
+        arguments: [
+          "-c", 
+          document.getElementById('input').value
+        ],
+        print: function(text) {
+          document.getElementById('output').textContent += text;
+        },
+        printErr: function(text) {
+          document.getElementById('stderr').textContent += text;
+        }
+      };
+      var module = Module(moduleArgs);
+    });
+});
+    </script>
+  </body>
+</html>
+
